@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chia sẻ đề thi - Vinhzota</title>
+    <title>Chi tiết Bài thi - Azota</title>
     <style>
         * {
             margin: 0;
@@ -13,29 +13,449 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
+            display: flex;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 100px;
+            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo-sidebar {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        .container {
+        .logo-sidebar:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-item {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 550px;
-            text-align: center;
-            animation: slideUp 0.5s ease-out;
+            color: #1e3c72;
         }
 
-        @keyframes slideUp {
+        .nav-spacer {
+            flex: 1;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #1e3c72;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .notification-btn:hover {
+            color: #1e3c72;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(30, 58, 138, 0.05);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: rgba(30, 58, 138, 0.1);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .exam-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .exam-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .exam-code {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .code-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .code-value {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 16px;
+        }
+
+        .qr-code {
+            width: 50px;
+            height: 50px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Exam Details */
+        .exam-details {
+            margin: 40px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .detail-icon {
+            font-size: 18px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #1a1a1a;
+            text-align: right;
+        }
+
+        .detail-value.status {
+            color: #999;
+        }
+
+        .detail-value.number {
+            color: #1e3c72;
+            font-size: 16px;
+        }
+
+        .detail-value.warning {
+            color: #ff9500;
+        }
+
+        /* Button */
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff9500 0%, #ff7500 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        /* History Link */
+        .history-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .history-link a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .history-link a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+
+            .logo-sidebar,
+            .nav-item,
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .exam-card {
+                padding: 30px;
+            }
+
+            .header-right {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .logo-sidebar,
+            .nav-item,
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .exam-title {
+                font-size: 24px;
+            }
+
+            .header-right {
+                gap: 10px;
+            }
+
+            .language-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Animation */
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -43,358 +463,128 @@
             }
         }
 
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: white;
-            animation: scaleIn 0.5s ease-out 0.2s both;
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-
-        .title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 15px;
-            color: #666;
-            margin-bottom: 30px;
-        }
-
-        .exam-info {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-
-        .exam-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: #666;
-        }
-
-        .info-value {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .code-section {
-            margin: 30px 0;
-        }
-
-        .code-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .code-box {
-            display: flex;
-            gap: 10px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 5px;
-            margin-bottom: 15px;
-        }
-
-        .code-text {
-            flex: 1;
-            padding: 15px 20px;
-            background: white;
-            border-radius: 8px;
-            font-size: 24px;
-            font-weight: 700;
-            color: #667eea;
-            letter-spacing: 4px;
-            text-align: center;
-        }
-
-        .copy-btn {
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        .copy-btn:active {
-            transform: translateY(0);
-        }
-
-        .link-section {
-            margin: 25px 0;
-        }
-
-        .link-label {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .link-box {
-            display: flex;
-            gap: 10px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            padding: 5px;
-        }
-
-        .link-text {
-            flex: 1;
-            padding: 12px 15px;
-            background: white;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #667eea;
-            word-break: break-all;
-            display: flex;
-            align-items: center;
-        }
-
-        .link-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-qr {
-            background: #f3f4f6;
-            color: #666;
-        }
-
-        .btn-qr:hover {
-            background: #e5e7eb;
-        }
-
-        .btn-share {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-share:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        .qr-section {
-            margin-top: 25px;
-            padding: 20px;
-            background: #f9fafb;
-            border-radius: 12px;
-            display: none;
-        }
-
-        .qr-section.show {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .qr-code {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 80px;
-        }
-
-        .qr-hint {
-            font-size: 13px;
-            color: #666;
-            margin-top: 10px;
-        }
-
-        .back-btn {
-            margin-top: 25px;
-            padding: 12px 30px;
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .back-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: transform 0.3s ease-out;
-            z-index: 1000;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            .title {
-                font-size: 24px;
-            }
-
-            .code-text {
-                font-size: 18px;
-            }
-
-            .link-actions {
-                flex-direction: column;
-            }
+        .exam-card {
+            animation: slideIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="success-icon">✓</div>
-        
-        <h1 class="title">Tạo đề thi thành công!</h1>
-        <p class="subtitle">Chia sẻ đề thi cho học sinh của bạn</p>
-
-        <div class="exam-info">
-            <div class="exam-name" id="examName">Đang tải...</div>
-            <div class="info-row">
-                <span class="info-label">Thời gian nộp:</span>
-                <span class="info-value" id="deadline">Không thời hạn</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Số câu hỏi:</span>
-                <span class="info-value" id="questionCount">0</span>
-            </div>
-        </div>
-
-        <div class="code-section">
-            <div class="code-label">Mã đề thi</div>
-            <div class="code-box">
-                <div class="code-text" id="examCode">------</div>
-                <button class="copy-btn" onclick="copyCode()">Copy</button>
-            </div>
-        </div>
-
-        <div class="link-section">
-            <div class="code-label">Link làm bài</div>
-            <div class="link-box">
-                <div class="link-text" id="examLink">...</div>
-            </div>
-            <div class="link-actions">
-                <button class="action-btn btn-qr" onclick="toggleQR()">
-                    📱 Hiển thị QR
-                </button>
-                <button class="action-btn btn-share" onclick="copyLink()">
-                    🔗 Copy Link
-                </button>
-            </div>
-        </div>
-
-        <div class="qr-section" id="qrSection">
-            <div class="qr-code">📱</div>
-            <div class="qr-hint">Quét QR code để truy cập nhanh</div>
-        </div>
-
-        <button class="back-btn" onclick="window.location.href='trang_admin.html'">
-            ← Quay lại quản lý
-        </button>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-sidebar" onclick="location.href='#'">Δ</div>
+        <div class="nav-item active" title="Bài thi">📚</div>
+        <div class="nav-item" title="Lớp học">👥</div>
+        <div class="nav-item" title="Thống kê">📊</div>
+        <div class="nav-spacer"></div>
+        <button class="settings-btn" title="Cài đặt">⚙️</button>
     </div>
 
-    <div class="toast" id="toast">Đã copy!</div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                ← Quay lại
+            </button>
+            <div class="header-right">
+                <button class="language-btn">
+                    🌐 Bộ quảng cáo
+                </button>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3E%3Crect fill='%23CE1126' width='24' height='8'/%3E%3Crect fill='%23FFDE00' y='8' width='24' height='8'/%3E%3C/svg%3E" alt="VN" style="width: 24px; height: auto; cursor: pointer;">
+                <div class="notification-btn">
+                    🔔
+                    <div class="notification-dot"></div>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">C</div>
+                    <div class="user-info">
+                        <div class="user-name">Công Vinh</div>
+                        <div class="user-role">Học sinh</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="exam-card">
+                <h1 class="exam-title">Học phần 2 beautiful!</h1>
+
+                <div class="exam-code">
+                    <div>
+                        <div class="code-text">Mã đề thi:</div>
+                        <div class="code-value" id="examCode">aq10gg</div>
+                    </div>
+                    <div class="qr-code" title="Mã QR">📱</div>
+                </div>
+
+                <div class="exam-details">
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">⏱️</span>
+                            <span>Thời gian làm bài</span>
+                        </div>
+                        <div class="detail-value status">Không giới hạn</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">📅</span>
+                            <span>Thời gian vào thi</span>
+                        </div>
+                        <div class="detail-value status">Không thời hạn</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">❓</span>
+                            <span>Số lượng câu hỏi</span>
+                        </div>
+                        <div class="detail-value number">210</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">📋</span>
+                            <span>Loại đề</span>
+                        </div>
+                        <div class="detail-value">Trắc nghiệm</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">👥</span>
+                            <span>Tổng lượt đã làm của đề</span>
+                        </div>
+                        <div class="detail-value number">54 lượt</div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startExam()">
+                    Bắt đầu thi →
+                </button>
+
+                <div class="history-link">
+                    <a href="#" onclick="showHistory(); return false;">Xem lịch sử làm bài</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const ma_code = urlParams.get('code');
 
+        let examData = null;
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            if (ma_code) {
-                loadExamInfo();
-            } else {
+            if (!ma_code) {
                 alert('Không tìm thấy mã đề thi');
-                window.location.href = 'trang_admin.html';
+                window.location.href = 'dang_nhap.html';
+                return;
             }
+            loadExamInfo();
         });
 
         // Load exam info
@@ -404,18 +594,11 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    const exam = result.data;
-                    document.getElementById('examName').textContent = exam.ten_de;
-                    document.getElementById('examCode').textContent = exam.ma_code;
-                    document.getElementById('deadline').textContent = exam.thoi_gian_nap ? formatDateTime(exam.thoi_gian_nap) : 'Không thời hạn';
-                    
-                    // Build link
-                    const baseUrl = window.location.origin + '/vinhzota/views/trang_lam.html';
-                    const fullLink = `${baseUrl}?code=${exam.ma_code}`;
-                    document.getElementById('examLink').textContent = fullLink;
+                    examData = result.data;
+                    displayExamInfo(examData);
                 } else {
                     alert('Không tìm thấy đề thi');
-                    window.location.href = 'trang_admin.html';
+                    window.location.href = 'dang_nhap.html';
                 }
             } catch (error) {
                 console.error('Load error:', error);
@@ -423,42 +606,97 @@
             }
         }
 
-        // Copy code
-        function copyCode() {
-            const code = document.getElementById('examCode').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                showToast('Đã copy mã đề thi!');
-            });
+        // Display exam info
+        function displayExamInfo(exam) {
+            document.querySelector('.exam-title').textContent = exam.ten_de;
+            document.querySelector('.code-value').textContent = exam.ma_code;
+
+            // Thời gian làm bài
+            const timeLimitEl = document.querySelector('.detail-row:nth-child(1) .detail-value');
+            if (exam.thoi_gian_nap) {
+                const deadline = new Date(exam.thoi_gian_nap);
+                timeLimitEl.textContent = formatTimeLimit(deadline);
+                timeLimitEl.classList.remove('status');
+                timeLimitEl.classList.add('warning');
+            } else {
+                timeLimitEl.textContent = 'Không giới hạn';
+                timeLimitEl.classList.add('status');
+            }
+
+            // Thời gian vào thi
+            const examTimeEl = document.querySelector('.detail-row:nth-child(2) .detail-value');
+            if (exam.thoi_gian_nap) {
+                const deadline = new Date(exam.thoi_gian_nap);
+                examTimeEl.textContent = formatDateTime(deadline);
+                examTimeEl.classList.remove('status');
+            } else {
+                examTimeEl.textContent = 'Không thời hạn';
+                examTimeEl.classList.add('status');
+            }
+
+            // Số lượng câu hỏi (will be loaded separately)
+            // For now show loading
+            loadQuestionCount(exam.ma_de);
+
+            // Update user info if logged in
+            checkAuth();
         }
 
-        // Copy link
-        function copyLink() {
-            const link = document.getElementById('examLink').textContent;
-            navigator.clipboard.writeText(link).then(() => {
-                showToast('Đã copy link làm bài!');
-            });
+        // Load question count
+        async function loadQuestionCount(ma_de) {
+            try {
+                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${ma_de}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const countEl = document.querySelector('.detail-row:nth-child(3) .detail-value');
+                    countEl.textContent = `${result.data.length} câu`;
+                }
+            } catch (error) {
+                console.error('Load questions error:', error);
+            }
         }
 
-        // Toggle QR
-        function toggleQR() {
-            const qrSection = document.getElementById('qrSection');
-            qrSection.classList.toggle('show');
+        // Check auth
+        async function checkAuth() {
+            try {
+                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const result = await response.json();
+
+                if (result.authenticated) {
+                    const user = result.user;
+                    document.querySelector('.avatar').textContent = user.full_name.charAt(0).toUpperCase();
+                    document.querySelector('.user-name').textContent = user.full_name;
+                    document.querySelector('.user-role').textContent = user.phan_quyen === 'teacher' ? 'Giáo viên' : 'Học sinh';
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+            }
         }
 
-        // Show toast
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2000);
+        // Format time limit
+        function formatTimeLimit(deadline) {
+            const now = new Date();
+            const diff = deadline - now;
+
+            if (diff <= 0) {
+                return 'Đã hết hạn';
+            }
+
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (hours > 24) {
+                return `${Math.floor(hours / 24)} ngày`;
+            } else if (hours > 0) {
+                return `${hours} giờ ${minutes} phút`;
+            } else {
+                return `${minutes} phút`;
+            }
         }
 
         // Format datetime
-        function formatDateTime(dateString) {
-            const date = new Date(dateString);
+        function formatDateTime(date) {
             return date.toLocaleString('vi-VN', {
                 day: '2-digit',
                 month: '2-digit',
@@ -466,6 +704,24 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
+        }
+
+        // Start Exam
+        function startExam() {
+            // Redirect to trang_lam.html with code
+            window.location.href = `trang_lam.html?code=${ma_code}`;
+        }
+
+        // Show History
+        function showHistory() {
+            alert('Xem lịch sử làm bài của đề thi này');
+        }
+
+        // Copy link
+        function copyLink() {
+            const url = window.location.origin + '/vinhzota/views/gui_bai.html?code=' + ma_code;
+            navigator.clipboard.writeText(url);
+            alert('Đã sao chép liên kết!');
         }
     </script>
 </body>

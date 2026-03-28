@@ -1,387 +1,579 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xem đáp án - Vinhzota</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #f5f7fb;
-            padding-bottom: 80px;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #667eea;
-        }
-        .btn-back {
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .btn-back:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        .main {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .question-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .question-number {
-            font-size: 16px;
-            font-weight: 600;
-            color: #667eea;
-        }
-        .question-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-correct {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .status-wrong {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .status-skipped {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-        .question-content {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-        .answers-list {
-            display: grid;
-            gap: 10px;
-        }
-        .answer-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
-        }
-        .answer-item.correct {
-            border-color: #10b981;
-            background: #d1fae5;
-        }
-        .answer-item.wrong {
-            border-color: #ef4444;
-            background: #fee2e2;
-        }
-        .answer-item.user-selected {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-        .answer-letter {
-            width: 32px;
-            height: 32px;
-            background: #e5e7eb;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #666;
-            flex-shrink: 0;
-        }
-        .answer-item.correct .answer-letter {
-            background: #10b981;
-            color: white;
-        }
-        .answer-item.wrong .answer-letter {
-            background: #ef4444;
-            color: white;
-        }
-        .answer-text {
-            flex: 1;
-            font-size: 15px;
-            color: #333;
-        }
-        .answer-badge {
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        .badge-correct {
-            background: #10b981;
-            color: white;
-        }
-        .badge-wrong {
-            background: #ef4444;
-            color: white;
-        }
-        .badge-user {
-            background: #667eea;
-            color: white;
-        }
-        .explanation {
-            margin-top: 15px;
-            padding: 15px;
-            background: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #92400e;
-        }
-        .summary {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .summary-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        .summary-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-        .stat {
-            text-align: center;
-            padding: 15px;
-            background: #f9fafb;
-            border-radius: 10px;
-        }
-        .stat-value {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-        }
-        @media (max-width: 768px) {
-            .summary-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xem đáp án - Vinhzota</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    color: #222;
+    font-size: 13.5px;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── LEFT SIDEBAR (icon nav) ── */
+  .icon-nav {
+    width: 68px;
+    background: #1e3a8a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .icon-nav .logo {
+    width: 68px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    background: #1e40af;
+  }
+
+  .icon-nav .logo svg { width: 30px; height: 30px; color: #fff; }
+
+  .nav-icons {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 12px 0; flex: 1;
+  }
+
+  .nav-icon-btn {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: none; background: transparent;
+    color: #93c5fd;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .15s;
+  }
+  .nav-icon-btn:hover { background: rgba(255,255,255,.12); }
+  .nav-icon-btn.active { background: rgba(255,255,255,.18); color: #fff; }
+  .nav-icon-btn svg { width: 20px; height: 20px; }
+
+  .nav-bottom {
+    padding: 14px 0;
+  }
+
+  /* ── CONTENT WRAPPER ── */
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    height: 52px;
+    background: #1e3a8a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+
+  .btn-back {
+    display: flex; align-items: center; gap: 6px;
+    color: #fff; font-size: 13px;
+    background: none; border: none; cursor: pointer;
+  }
+  .btn-back:hover { opacity: .8; }
+  .btn-back svg { width: 16px; height: 16px; }
+
+  .top-right {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .btn-premium {
+    background: #06b6d4; color: #fff;
+    border: none; border-radius: 8px;
+    padding: 7px 14px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+  }
+
+  .flag { width: 26px; height: 18px; border-radius: 3px; overflow: hidden; }
+  .flag img { width: 100%; height: 100%; object-fit: cover; }
+
+  .notif-btn {
+    background: none; border: none; cursor: pointer;
+    color: #93c5fd; display: flex; align-items: center;
+  }
+  .notif-btn svg { width: 18px; height: 18px; }
+
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #3b82f6; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .user-info { line-height: 1.3; }
+  .user-info .name { color: #fff; font-size: 13px; font-weight: 600; }
+  .user-info .role { color: #93c5fd; font-size: 11.5px; }
+
+  /* ── MAIN AREA ── */
+  .main-area {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    width: 320px;
+    padding: 18px 16px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    border-right: 1px solid #e0e0e0;
+    background: #f8f9fb;
+  }
+
+  .score-box {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  .score-title {
+    font-size: 18px; font-weight: 700; color: #222; margin-bottom: 14px;
+  }
+
+  .detail-box {
+    background: #f4f6fb;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .detail-title {
+    font-size: 12.5px; font-weight: 700; color: #333; margin-bottom: 10px;
+  }
+
+  .detail-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 6px; font-size: 12.5px; color: #555;
+  }
+  .detail-row:last-child { margin-bottom: 0; }
+  .detail-row .val { color: #222; font-weight: 500; }
+
+  .link-btn {
+    background: none; border: none; color: #1a6ef5;
+    font-size: 12.5px; cursor: pointer; padding: 0;
+    text-decoration: underline; margin-top: 8px;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ── CONTENT TOP BAR ── */
+  .content-topbar {
+    display: flex; align-items: center;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0 20px;
+    height: 48px;
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .sidebar-toggle {
+    background: none; border: none; cursor: pointer;
+    color: #777; display: flex; align-items: center; padding: 6px;
+    border-radius: 6px; margin-right: 12px;
+  }
+  .sidebar-toggle:hover { background: #f0f0f0; }
+  .sidebar-toggle svg { width: 18px; height: 18px; }
+
+  .content-title {
+    flex: 1; text-align: center;
+    font-size: 14px; font-weight: 600; color: #333;
+  }
+
+  .content-tags { display: flex; gap: 8px; }
+
+  .tag {
+    border-radius: 6px; padding: 5px 12px;
+    font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .tag-correct { background: #16a34a; color: #fff; }
+  .tag-wrong { background: #ef4444; color: #fff; }
+  .tag-outline {
+    background: transparent; color: #555;
+    border: 1px solid #ccc;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; border-bottom: 1px solid #e8e8e8;
+    background: #fff; padding: 0 20px;
+  }
+
+  .tab {
+    padding: 10px 0; margin-right: 24px;
+    font-size: 13.5px; color: #777;
+    border-bottom: 2px solid transparent;
+    cursor: pointer; font-weight: 500;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .tab.active {
+    color: #1a6ef5;
+    border-bottom-color: #1a6ef5;
+    font-weight: 600;
+  }
+
+  /* ── QUESTIONS ── */
+  .questions-area { padding: 20px 24px; }
+
+  .question-block {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+
+  .q-meta {
+    font-size: 12px; color: #999; margin-bottom: 4px;
+  }
+  .q-meta .q-num { color: #333; font-weight: 700; font-size: 13.5px; margin-right: 6px; }
+
+  .q-text {
+    font-size: 13.5px; font-weight: 600; color: #111;
+    margin-bottom: 18px; line-height: 1.55;
+  }
+
+  /* 2-column options grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 28px;
+    margin-bottom: 18px;
+  }
+
+  .opt-row {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 13px; color: #333; line-height: 1.45;
+  }
+
+  .opt-letter { font-weight: 700; flex-shrink: 0; min-width: 18px; }
+
+  /* ── ANSWER BAR ── */
+  .answer-bar {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; margin-top: 6px;
+  }
+
+  .correct-label {
+    font-size: 13px; font-weight: 700; color: #16a34a;
+  }
+  .wrong-label {
+    font-size: 13px; font-weight: 700; color: #ef4444;
+  }
+
+  .answer-chips {
+    display: flex; gap: 0;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .chip {
+    width: 42px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    border-right: 1px solid #e0e0e0;
+    color: #333;
+  }
+  .chip:last-child { border-right: none; }
+
+  .chip.correct-chip {
+    color: #16a34a;
+  }
+  .chip.wrong-chip {
+    color: #ef4444;
+  }
+
+  .chip-icon { font-size: 14px; margin-right: 2px; }
+</style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">
-            <div class="logo-icon">V</div>
-            <span>Vinhzota</span>
+
+<!-- ICON NAV -->
+<nav class="icon-nav">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <div class="nav-icons">
+    <button class="nav-icon-btn active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
+    <button class="nav-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </button>
+  </div>
+  <div class="nav-bottom">
+    <button class="nav-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- CONTENT WRAPPER -->
+<div class="content-wrapper">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <button class="btn-back" onclick="window.location.href='ket_qua.html?ma_bai_lam=' + ma_bai_lam">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Quay lại
+    </button>
+    <div class="top-right">
+      <button class="btn-premium">
+        💎 Bỏ quảng cáo
+      </button>
+      <!-- Vietnam flag -->
+      <div style="width:26px;height:18px;border-radius:3px;background:#da251d;display:flex;align-items:center;justify-content:center;">
+        <span style="color:#ffcd00;font-size:12px;">★</span>
+      </div>
+      <button class="notif-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="user-avatar" id="userAvatar">HS</div>
+      <div class="user-info">
+        <div class="name" id="userName">Học sinh</div>
+        <div class="role">Thí sinh</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="score-box">
+        <div class="score-title" id="scoreTitle">Điểm: --</div>
+        <div class="detail-box">
+          <div class="detail-title">Thông tin chi tiết</div>
+          <div class="detail-row">
+            <span>Thời gian làm bài:</span>
+            <span class="val" id="timeSpent">-</span>
+          </div>
+          <div class="detail-row">
+            <span>Thời gian nộp bài:</span>
+            <span class="val" id="submitTime">-</span>
+          </div>
+          <div class="detail-row">
+            <span>Trắc nghiệm:</span>
+            <span class="val" id="questionStats">-</span>
+          </div>
+          <button class="link-btn" onclick="copyLink()">📋 Copy link gửi giáo viên</button>
         </div>
-        <button class="btn-back" onclick="window.location.href='ket_qua.html?ma_bai_lam=' + ma_bai_lam">← Quay lại</button>
+      </div>
     </div>
 
-    <div class="main">
-        <div class="summary" id="summary">
-            <h2 class="summary-title">📊 Tổng kết</h2>
-            <div class="summary-stats">
-                <div class="stat">
-                    <div class="stat-value" id="totalStat">0</div>
-                    <div class="stat-label">Tổng câu</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" style="color: #10b981;" id="correctStat">0</div>
-                    <div class="stat-label">Đúng</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" style="color: #ef4444;" id="wrongStat">0</div>
-                    <div class="stat-label">Sai</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value" style="color: #6b7280;" id="scoreStat">0</div>
-                    <div class="stat-label">Điểm</div>
-                </div>
-            </div>
-        </div>
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
 
-        <div id="questionsContainer">
-            <!-- Questions will be loaded here -->
+      <!-- CONTENT TOP BAR -->
+      <div class="content-topbar">
+        <button class="sidebar-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+        <div class="content-title" id="examTitle">Đang tải...</div>
+        <div class="content-tags">
+          <button class="tag tag-correct">Đúng & sai</button>
         </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active">Trắc nghiệm</button>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div class="questions-area" id="questionsArea"></div>
+
     </div>
+  </div>
+</div>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const ma_bai_lam = urlParams.get('ma_bai_lam');
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const ma_bai_lam = urlParams.get('ma_bai_lam');
+
+let submission = null;
+let questions = [];
+let userAnswers = {};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    if (!ma_bai_lam) {
+        alert('Không tìm thấy bài làm');
+        window.location.href = 'dang_nhap.html';
+        return;
+    }
+    loadReview();
+});
+
+// Load review data
+async function loadReview() {
+    try {
+        // Get submission
+        const subResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submission_detail&ma_bai_lam=${ma_bai_lam}`);
+        const subResult = await subResponse.json();
+
+        if (!subResult.success) {
+            alert('Không tìm thấy bài làm');
+            return;
+        }
+
+        submission = subResult.data;
+
+        // Update header
+        const studentName = submission.ten_hoc_sinh || 'Học sinh';
+        document.getElementById('userName').textContent = studentName;
+        document.getElementById('userAvatar').textContent = studentName.charAt(0).toUpperCase();
+
+        // Parse user answers
+        try {
+            userAnswers = JSON.parse(submission.danh_sach_dap_an || '{}');
+        } catch (e) {}
+
+        // Get exam info
+        const examResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${submission.ma_de}`);
+        const examResult = await examResponse.json();
+        if (examResult.success) {
+            document.getElementById('examTitle').textContent = examResult.data.ten_de;
+        }
+
+        // Get exam questions with correct answers
+        const qResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${submission.ma_de}`);
+        const qResult = await qResponse.json();
+
+        if (qResult.success) {
+            questions = qResult.data;
+            renderReview();
+        }
+    } catch (error) {
+        console.error('Load error:', error);
+        alert('Có lỗi xảy ra');
+    }
+}
+
+// Render chip
+function renderChip(letter, correctAnswer, userAnswer) {
+    const isCorrect = letter === correctAnswer;
+    const isWrong = userAnswer && letter === userAnswer && !isCorrect;
+    let cls = "chip";
+    let icon = "";
+    if (isCorrect) { cls += " correct-chip"; icon = '<span class="chip-icon">✓</span>'; }
+    if (isWrong)   { cls += " wrong-chip";   icon = '<span class="chip-icon">✗</span>'; }
+    return `<div class="${cls}">${icon}${letter}</div>`;
+}
+
+// Render review
+function renderReview() {
+    // Update stats
+    const total = questions.length;
+    let correct = 0;
+
+    questions.forEach(q => {
+        const userAnswer = userAnswers[q.ma_cau_hoi];
+        const correctAnswer = q.dap_an.find(a => a.la_dung);
+
+        if (userAnswer && correctAnswer && userAnswer.toUpperCase() === correctAnswer.ky_tu) {
+            correct++;
+        }
+    });
+
+    const score = total > 0 ? ((correct / total) * 10).toFixed(2) : 0;
+    
+    document.getElementById('scoreTitle').textContent = `Điểm: ${score}/${total}`;
+    document.getElementById('submitTime').textContent = formatDateTime(submission.thoi_gian_nop);
+    document.getElementById('questionStats').textContent = `${correct}/${total} câu`;
+
+    // Calculate time spent
+    const timeSpent = calculateTimeSpent(userAnswers);
+    document.getElementById('timeSpent').textContent = timeSpent;
+
+    // Render questions
+    const area = document.getElementById('questionsArea');
+    area.innerHTML = questions.map((q, index) => {
+        const userAnswer = userAnswers[q.ma_cau_hoi];
+        const correctAnswer = q.dap_an.find(a => a.la_dung);
+        const isCorrect = userAnswer && correctAnswer && userAnswer.toUpperCase() === correctAnswer.ky_tu;
+
+        const labelClass = isCorrect ? "correct-label" : "wrong-label";
+        const labelText = `Đáp án đúng: ${correctAnswer ? correctAnswer.ky_tu : 'N/A'}`;
+
+        const chips = ["A","B","C","D"].map(l =>
+            renderChip(l, correctAnswer ? correctAnswer.ky_tu : '', userAnswer)
+        ).join("");
+
+        // Split options into 2 rows × 2 cols
+        const opts = q.dap_an.map(o => `
+            <div class="opt-row">
+                <span class="opt-letter">${o.ky_tu}.</span>
+                <span>${o.noi_dung}</span>
+            </div>`).join("");
+
+        return `
+            <div class="question-block">
+                <div class="q-meta"><span class="q-num">Câu ${index + 1}</span> ID: ${q.ma_cau_hoi}</div>
+                <div class="q-text">${q.noi_dung}</div>
+                <div class="options-grid">${opts}</div>
+                <div class="answer-bar">
+                    <span class="${labelClass}">${labelText}</span>
+                    <div class="answer-chips">${chips}</div>
+                </div>
+            </div>`;
+    }).join("");
+}
+
+// Calculate time spent
+function calculateTimeSpent(answers) {
+    if (answers.thoi_gian_lam_bai) {
+        const seconds = answers.thoi_gian_lam_bai;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
         
-        let submission = null;
-        let questions = [];
-        let userAnswers = {};
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!ma_bai_lam) {
-                alert('Không tìm thấy bài làm');
-                window.location.href = 'dang_nhap.html';
-                return;
-            }
-            loadReview();
-        });
-
-        async function loadReview() {
-            try {
-                // Get submission
-                const subResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submission_detail&ma_bai_lam=${ma_bai_lam}`);
-                const subResult = await subResponse.json();
-
-                if (!subResult.success) {
-                    alert('Không tìm thấy bài làm');
-                    return;
-                }
-
-                submission = subResult.data;
-
-                // Parse user answers
-                try {
-                    userAnswers = JSON.parse(submission.danh_sach_dap_an || '{}');
-                } catch (e) {}
-
-                // Get exam questions with correct answers
-                const qResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${submission.ma_de}`);
-                const qResult = await qResponse.json();
-
-                if (qResult.success) {
-                    questions = qResult.data;
-                    renderReview();
-                }
-            } catch (error) {
-                console.error('Load error:', error);
-                alert('Có lỗi xảy ra');
-            }
+        if (h > 0) {
+            return `${h} giờ ${m} phút`;
+        } else if (m > 0) {
+            return `${m} phút ${s} giây`;
+        } else {
+            return `${s} giây`;
         }
+    }
+    return 'N/A';
+}
 
-        function renderReview() {
-            // Update summary
-            const total = questions.length;
-            let correct = 0;
+// Format datetime
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
 
-            questions.forEach(q => {
-                const userAnswer = userAnswers[q.ma_cau_hoi];
-                const correctAnswer = q.dap_an.find(a => a.la_dung);
-                
-                if (userAnswer && correctAnswer && userAnswer.toUpperCase() === correctAnswer.ky_tu) {
-                    correct++;
-                }
-            });
-
-            const wrong = Object.keys(userAnswers).length - correct;
-            const skipped = total - Object.keys(userAnswers).length;
-            const score = total > 0 ? ((correct / total) * 10).toFixed(2) : 0;
-
-            document.getElementById('totalStat').textContent = total;
-            document.getElementById('correctStat').textContent = correct;
-            document.getElementById('wrongStat').textContent = wrong;
-            document.getElementById('scoreStat').textContent = score;
-
-            // Render questions
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = questions.map((q, index) => {
-                const userAnswer = userAnswers[q.ma_cau_hoi];
-                const correctAnswer = q.dap_an.find(a => a.la_dung);
-                const isCorrect = userAnswer && correctAnswer && userAnswer.toUpperCase() === correctAnswer.ky_tu;
-                const isSkipped = !userAnswer;
-
-                let statusClass = 'status-correct';
-                let statusText = 'Đúng';
-                if (isSkipped) {
-                    statusClass = 'status-skipped';
-                    statusText = 'Bỏ qua';
-                } else if (!isCorrect) {
-                    statusClass = 'status-wrong';
-                    statusText = 'Sai';
-                }
-
-                return `
-                    <div class="question-card">
-                        <div class="question-header">
-                            <span class="question-number">Câu ${index + 1}</span>
-                            <span class="question-status ${statusClass}">${statusText}</span>
-                        </div>
-                        <div class="question-content">${q.noi_dung}</div>
-                        <div class="answers-list">
-                            ${q.dap_an.map(a => {
-                                const isUserAnswer = userAnswer && userAnswer.toUpperCase() === a.ky_tu;
-                                const isCorrectAnswer = a.la_dung;
-                                
-                                let itemClass = '';
-                                let badges = '';
-                                
-                                if (isCorrectAnswer) {
-                                    itemClass = 'correct';
-                                    badges = '<span class="answer-badge badge-correct">Đáp án đúng</span>';
-                                }
-                                if (isUserAnswer && !isCorrectAnswer) {
-                                    itemClass = 'wrong';
-                                    badges = '<span class="answer-badge badge-wrong">Bạn chọn</span>' + badges;
-                                }
-                                if (isUserAnswer && isCorrectAnswer) {
-                                    itemClass = 'correct user-selected';
-                                    badges = '<span class="answer-badge badge-user">Bạn chọn</span>';
-                                }
-
-                                return `
-                                    <div class="answer-item ${itemClass}">
-                                        <div class="answer-letter">${a.ky_tu}</div>
-                                        <div class="answer-text">${a.noi_dung}</div>
-                                        ${badges}
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-    </script>
+// Copy link
+function copyLink() {
+    const text = window.location.origin + '/vinhzota/views/ket_qua.html?ma_bai_lam=' + ma_bai_lam;
+    navigator.clipboard.writeText(text);
+    alert('Đã sao chép liên kết!');
+}
+</script>
 </body>
 </html>

@@ -3,350 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kết quả bài thi - Vinhzota</title>
+    <title>Kết quả bài làm - Vinhzota</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        :root {
+            --primary-blue: #1a44a0;
+            --bg-color: #f0f4f9;
+            --white: #ffffff;
+            --text-dark: #333;
+            --text-muted: #666;
+            --premium-purple: #7c4dff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background-color: var(--bg-color);
+            overflow: hidden;
+        }
+
+        .app-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            height: 100vh;
         }
 
-        .container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 600px;
-            text-align: center;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .score-circle {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 30px;
-            border-radius: 50%;
+        /* Sidebar Styling */
+        .sidebar {
+            width: 80px;
+            background-color: var(--primary-blue);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            animation: scaleIn 0.5s ease-out 0.2s both;
-            position: relative;
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-            }
-            to {
-                transform: scale(1);
-            }
-        }
-
-        .score-circle.excellent {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
-
-        .score-circle.good {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .score-circle.average {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .score-circle.poor {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-
-        .score-number {
-            font-size: 56px;
-            font-weight: 700;
+            padding: 20px 0;
             color: white;
-            line-height: 1;
+            flex-shrink: 0;
         }
 
-        .score-label {
-            font-size: 14px;
-            color: rgba(255,255,255,0.9);
-            margin-top: 5px;
+        .logo {
+            font-size: 24px;
+            margin-bottom: 40px;
+            cursor: pointer;
         }
 
-        .score-icon {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            font-size: 50px;
-            animation: bounce 1s infinite;
+        .menu {
+            flex-grow: 1;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .menu-item {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: 0.3s;
+            color: rgba(255,255,255,0.6);
         }
 
-        .title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 10px;
+        .menu-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
         }
 
-        .subtitle {
-            font-size: 15px;
-            color: #666;
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .settings {
+            cursor: pointer;
+            font-size: 20px;
+            padding-bottom: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px 40px;
+            overflow-y: auto;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
         }
 
-        .student-info {
-            background: #f9fafb;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: left;
+        .btn-back {
+            border: none;
+            background: none;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .info-row {
+        .header-right {
             display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-premium {
+            background-color: var(--premium-purple);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .flag img {
+            width: 25px;
+            border-radius: 3px;
+        }
+
+        .notification {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            display: block;
+            font-weight: bold;
             font-size: 14px;
         }
 
-        .info-row:last-child {
-            border-bottom: none;
+        .user-role {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
-        .info-label {
-            color: #666;
-            font-weight: 500;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
         }
 
-        .info-value {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .stats {
+        /* Dashboard Grid */
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Result Card */
+        .result-card {
+            text-align: center;
+        }
+
+        .result-card h2 {
+            font-size: 22px;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .score-value {
+            font-size: 40px;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+
+        .exam-name {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .stats-list {
+            text-align: left;
             margin-bottom: 30px;
         }
 
         .stat-item {
-            background: #f9fafb;
-            border-radius: 10px;
-            padding: 20px 15px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-number.correct {
-            color: #10b981;
-        }
-
-        .stat-number.wrong {
-            color: #ef4444;
-        }
-
-        .stat-number.skipped {
-            color: #6b7280;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
-        .message {
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        .message.success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .message.info {
-            background: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
-        }
-
-        .buttons {
             display: flex;
-            gap: 10px;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--text-muted);
+            font-size: 14px;
         }
 
-        .btn {
-            padding: 14px 28px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-size: 15px;
+        .stat-item i {
+            margin-right: 8px;
+            width: 16px;
+        }
+
+        .stat-val {
+            color: var(--text-dark);
             font-weight: 600;
-            transition: all 0.3s;
+        }
+
+        .btn-view-answers {
+            width: 100%;
+            padding: 14px;
+            border: 1.5px solid var(--primary-blue);
+            background: none;
+            color: var(--primary-blue);
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-view-answers:hover {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        /* Leaderboard Styling */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .btn-copy {
+            background: #eef2ff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: var(--primary-blue);
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #edf2f7;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: transform 0.2s;
+        }
+
+        .rank-item:hover {
+            transform: scale(1.02);
+        }
+
+        .rank-num {
+            width: 30px;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+
+        .rank-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #cbd5e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 15px;
+            font-weight: bold;
+            object-fit: cover;
+        }
+
+        .rank-info {
+            flex-grow: 1;
+        }
+
+        .rank-info .name {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .rank-info .pts {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Top 1 Special */
+        .rank-1 {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .rank-1 .rank-num, .rank-1 .pts {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .gold { color: #ffd700; }
+        .silver { color: #cbd5e0; }
+        .bronze { color: #ed8936; }
+
+        .view-more {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--primary-blue);
             text-decoration: none;
-            display: inline-block;
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #666;
-        }
-
-        .btn-secondary:hover {
-            background: #e5e7eb;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
-        }
-
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            .title {
-                font-size: 24px;
-            }
-
-            .score-circle {
-                width: 140px;
-                height: 140px;
-            }
-
-            .score-number {
-                font-size: 42px;
-            }
-
-            .stats {
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard-grid {
                 grid-template-columns: 1fr;
             }
-
-            .buttons {
-                flex-direction: column;
+            .sidebar {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="score-circle" id="scoreCircle">
-            <span class="score-icon" id="scoreIcon">🎉</span>
-            <span class="score-number" id="scoreNumber">0</span>
-            <span class="score-label">Điểm số</span>
-        </div>
 
-        <h1 class="title" id="resultTitle">Hoàn thành!</h1>
-        <p class="subtitle" id="resultSubtitle">Bài thi của bạn đã được nộp</p>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo"><i class="fa-solid fa-shapes"></i></div>
+            <nav class="menu">
+                <div class="menu-item active" title="Dashboard"><i class="fa-solid fa-layer-group"></i></div>
+                <div class="menu-item" title="Courses"><i class="fa-solid fa-book-bookmark"></i></div>
+                <div class="menu-item" title="Statistics"><i class="fa-solid fa-chart-simple"></i></div>
+            </nav>
+            <div class="settings"><i class="fa-solid fa-gear"></i></div>
+        </aside>
 
-        <div class="student-info" id="studentInfo">
-            <div class="info-row">
-                <span class="info-label">Họ tên:</span>
-                <span class="info-value" id="studentName">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Email:</span>
-                <span class="info-value" id="studentEmail">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Thời gian nộp:</span>
-                <span class="info-value" id="submitTime">-</span>
-            </div>
-        </div>
+        <main class="main-content">
+            <header class="top-header">
+                <button class="btn-back" onclick="window.history.back()">
+                    <i class="fa-solid fa-chevron-left"></i> Quay lại
+                </button>
+                <div class="header-right">
+                    <button class="btn-premium"><i class="fa-solid fa-gem"></i> Bỏ quảng cáo</button>
+                    <div class="flag"><img src="https://flagcdn.com/w40/vn.png" alt="VN"></div>
+                    <div class="notification"><i class="fa-regular fa-bell"></i></div>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span class="user-name" id="headerUserName">Thí sinh</span>
+                            <span class="user-role" id="headerUserRole">Học sinh</span>
+                        </div>
+                        <img src="https://i.pravatar.cc/150?u=default" alt="Avatar" class="avatar" id="headerAvatar">
+                    </div>
+                </div>
+            </header>
 
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number correct" id="correctCount">0</div>
-                <div class="stat-label">Đúng</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number wrong" id="wrongCount">0</div>
-                <div class="stat-label">Sai</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number skipped" id="totalCount">0</div>
-                <div class="stat-label">Tổng câu</div>
-            </div>
-        </div>
+            <div class="dashboard-grid">
+                <section class="card result-card">
+                    <h2 id="resultTitle">Bài làm của bạn đã được gửi đi</h2>
+                    <div class="score-display">
+                        Điểm của bạn: <span class="score-value" id="userScore">--</span>
+                    </div>
+                    <p class="exam-name" id="examName">Đang tải...</p>
 
-        <div class="message" id="resultMessage">
-            <!-- Message will be inserted here -->
-        </div>
+                    <div class="stats-list">
+                        <div class="stat-item">
+                            <span><i class="fa-regular fa-user"></i> Thí sinh</span>
+                            <span class="stat-val" id="studentName">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fa-regular fa-clock"></i> Thời gian nộp</span>
+                            <span class="stat-val" id="submitTime">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fa-regular fa-hourglass"></i> Thời gian làm bài</span>
+                            <span class="stat-val" id="timeSpent">-</span>
+                        </div>
+                        <div class="stat-item">
+                            <span><i class="fa-regular fa-circle-check"></i> Số câu đúng</span>
+                            <span class="stat-val" id="correctCount">-/-</span>
+                        </div>
+                    </div>
 
-        <div class="buttons">
-            <button class="btn btn-secondary" onclick="window.location.href='dang_nhap.html'">
-                ← Quay lại
-            </button>
-            <a href="#" class="btn btn-outline" id="reviewBtn" style="display: none;">
-                📝 Xem lại đáp án
-            </a>
-            <button class="btn btn-primary" onclick="window.location.href='dang_nhap.html'">
-                Tiếp tục học tập
-            </button>
-        </div>
+                    <button class="btn-view-answers" id="reviewBtn" onclick="alert('Đang tải đáp án chi tiết...')" style="display: none;">
+                        Xem đáp án <i class="fa-solid fa-chevron-right" style="margin-left:5px"></i>
+                    </button>
+                </section>
+
+                <section class="card leaderboard-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-trophy" style="color: #f1c40f;"></i> Bảng xếp hạng</h3>
+                        <button class="btn-copy" onclick="copyRank()">
+                            <i class="fa-regular fa-copy"></i> Sao chép
+                        </button>
+                    </div>
+
+                    <div class="leaderboard-list" id="leaderboardList">
+                        <!-- Leaderboard will be loaded here -->
+                        <div class="rank-item rank-1">
+                            <div class="rank-num">1</div>
+                            <div class="rank-avatar" style="background: #fff; color: #a855f7;">A</div>
+                            <div class="rank-info">
+                                <p class="name">abc</p>
+                                <p class="pts">353 điểm</p>
+                            </div>
+                            <div class="rank-badge gold"><i class="fa-solid fa-crown"></i></div>
+                        </div>
+
+                        <div class="rank-item">
+                            <div class="rank-num">2</div>
+                            <img src="https://i.pravatar.cc/150?u=vinh" class="rank-avatar">
+                            <div class="rank-info">
+                                <p class="name">Công Vinh (Bạn)</p>
+                                <p class="pts">346 điểm</p>
+                            </div>
+                            <div class="rank-badge silver"><i class="fa-solid fa-crown"></i></div>
+                        </div>
+
+                        <div class="rank-item">
+                            <div class="rank-num">3</div>
+                            <img src="https://i.pravatar.cc/150?u=dan" class="rank-avatar">
+                            <div class="rank-info">
+                                <p class="name">Dân</p>
+                                <p class="pts">1 điểm</p>
+                            </div>
+                            <div class="rank-badge bronze"><i class="fa-solid fa-crown"></i></div>
+                        </div>
+                    </div>
+
+                    <a href="javascript:void(0)" class="view-more" onclick="alert('Tính năng đang phát triển!')">
+                        Xem thêm <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </section>
+            </div>
+        </main>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const ma_bai_lam = urlParams.get('ma_bai_lam');
         const cho_xem_ket_qua = urlParams.get('cho_xem_ket_qua');
+
+        let submissionData = null;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -364,6 +496,7 @@
                 const result = await response.json();
 
                 if (result.success) {
+                    submissionData = result.data;
                     displayResult(result.data);
                 } else {
                     showDefaultResult();
@@ -376,14 +509,19 @@
 
         // Display result
         function displayResult(submission) {
-            // Student info
-            document.getElementById('studentName').textContent = submission.ten_hoc_sinh || 'Ẩn danh';
-            document.getElementById('studentEmail').textContent = submission.email || '-';
-            document.getElementById('submitTime').textContent = formatDateTime(submission.thoi_gian_nop);
+            // Update header
+            const studentName = submission.ten_hoc_sinh || 'Ẩn danh';
+            document.getElementById('headerUserName').textContent = studentName;
+            document.getElementById('headerUserRole').textContent = 'Thí sinh';
+            document.getElementById('headerAvatar').src = `https://i.pravatar.cc/150?u=${studentName}`;
 
-            // Score
+            // Update result card
+            document.getElementById('studentName').textContent = studentName;
+            document.getElementById('submitTime').textContent = formatDateTime(submission.thoi_gian_nop);
+            
             const score = parseFloat(submission.diem) || 0;
-            document.getElementById('scoreNumber').textContent = score.toFixed(1);
+            document.getElementById('userScore').textContent = score.toFixed(1);
+            document.getElementById('examName').textContent = 'Bài thi trắc nghiệm';
 
             // Calculate stats
             let answers = {};
@@ -393,72 +531,144 @@
 
             const totalQuestions = Object.keys(answers).length;
             const correctAnswers = Math.round((score / 10) * totalQuestions);
-            const wrongAnswers = totalQuestions - correctAnswers;
+            
+            document.getElementById('correctCount').textContent = `${correctAnswers}/${totalQuestions}`;
 
-            document.getElementById('correctCount').textContent = correctAnswers;
-            document.getElementById('wrongCount').textContent = wrongAnswers;
-            document.getElementById('totalCount').textContent = totalQuestions;
-
-            // Style based on score
-            const circle = document.getElementById('scoreCircle');
-            const icon = document.getElementById('scoreIcon');
-            const title = document.getElementById('resultTitle');
-            const subtitle = document.getElementById('resultSubtitle');
-            const message = document.getElementById('resultMessage');
-
-            circle.className = 'score-circle';
-
-            if (score >= 8) {
-                circle.classList.add('excellent');
-                icon.textContent = '🏆';
-                title.textContent = 'Xuất sắc!';
-                subtitle.textContent = 'Làm rất tốt, phát huy nhé!';
-                message.className = 'message success';
-                message.innerHTML = '🌟 <strong>Tuyệt vời!</strong> Bạn đã hoàn thành bài thi với kết quả rất cao. Tiếp tục phát huy!';
-            } else if (score >= 6.5) {
-                circle.classList.add('good');
-                icon.textContent = '👏';
-                title.textContent = 'Làm tốt!';
-                subtitle.textContent = 'Kết quả khá tốt';
-                message.className = 'message success';
-                message.innerHTML = '👍 <strong>Tốt lắm!</strong> Bạn đã hoàn thành bài thi. Cố gắng hơn nữa nhé!';
-            } else if (score >= 5) {
-                circle.classList.add('average');
-                icon.textContent = '📚';
-                title.textContent = 'Hoàn thành';
-                subtitle.textContent = 'Cần cố gắng hơn';
-                message.className = 'message info';
-                message.innerHTML = '💪 <strong>Cố gắng!</strong> Hãy ôn tập thêm để đạt kết quả cao hơn trong lần sau.';
-            } else {
-                circle.classList.add('poor');
-                icon.textContent = '📖';
-                title.textContent = 'Cần cải thiện';
-                subtitle.textContent = 'Đừng nản lòng!';
-                message.className = 'message info';
-                message.innerHTML = '🌱 <strong>Không sao!</strong> Thất bại là mẹ thành công. Hãy ôn tập kỹ hơn và thử lại nhé!';
-            }
+            // Calculate time spent
+            const timeSpent = calculateTimeSpent(answers);
+            document.getElementById('timeSpent').textContent = timeSpent;
 
             // Show review button if allowed
-            if (cho_xem_ket_qua === '1' || cho_xem_ket_qua === 'yes') {
-                document.getElementById('reviewBtn').style.display = 'inline-block';
-                document.getElementById('reviewBtn').href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+            if (cho_xem_ket_qua === '1' || cho_xem_ket_qua === 'yes' || cho_xem_ket_qua === 'true') {
+                const reviewBtn = document.getElementById('reviewBtn');
+                reviewBtn.style.display = 'block';
+                reviewBtn.onclick = () => {
+                    window.location.href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+                };
+            } else {
+                // For testing: show button anyway (remove this in production)
+                const reviewBtn = document.getElementById('reviewBtn');
+                reviewBtn.style.display = 'block';
+                reviewBtn.onclick = () => {
+                    window.location.href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+                };
+            }
+
+            // Update title based on score
+            const resultTitle = document.getElementById('resultTitle');
+            if (score >= 8) {
+                resultTitle.textContent = '🎉 Xuất sắc! Làm rất tốt!';
+            } else if (score >= 6.5) {
+                resultTitle.textContent = '👏 Làm tốt!';
+            } else if (score >= 5) {
+                resultTitle.textContent = '📚 Hoàn thành!';
+            } else {
+                resultTitle.textContent = '📖 Cần cải thiện';
+            }
+
+            // Load leaderboard
+            loadLeaderboard(submission.ma_de, submission.ma_bai_lam, score, studentName);
+        }
+
+        // Show default result
+        function showDefaultResult() {
+            document.getElementById('resultTitle').textContent = '📬 Bài làm đã được nộp!';
+            document.getElementById('userScore').textContent = '--';
+            document.getElementById('examName').textContent = 'Đang chờ chấm...';
+            document.getElementById('studentName').textContent = 'Ẩn danh';
+            document.getElementById('submitTime').textContent = '-';
+            document.getElementById('correctCount').textContent = '-/-';
+        }
+
+        // Load leaderboard
+        async function loadLeaderboard(ma_de, currentMaBaiLam, currentScore, currentStudentName) {
+            try {
+                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submissions&ma_de=${ma_de}`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const submissions = result.data;
+                    
+                    // Sort by score descending
+                    const sorted = submissions.sort((a, b) => {
+                        const scoreA = parseFloat(a.diem) || 0;
+                        const scoreB = parseFloat(b.diem) || 0;
+                        return scoreB - scoreA;
+                    });
+
+                    // Render leaderboard
+                    const container = document.getElementById('leaderboardList');
+                    container.innerHTML = sorted.slice(0, 10).map((sub, index) => {
+                        const score = parseFloat(sub.diem) || 0;
+                        const name = sub.ten_hoc_sinh || 'Ẩn danh';
+                        const isCurrentUser = sub.ma_bai_lam === currentMaBaiLam;
+                        const rankClass = index === 0 ? 'rank-1' : '';
+                        const badgeClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+                        const initials = getInitials(name);
+                        const avatarUrl = isCurrentUser ? `https://i.pravatar.cc/150?u=${name}` : `https://i.pravatar.cc/150?u=${name}${index}`;
+                        
+                        return `
+                            <div class="rank-item ${rankClass}" ${isCurrentUser ? 'style="border: 2px solid #1a44a0;"' : ''}>
+                                <div class="rank-num">${index + 1}</div>
+                                <img src="${avatarUrl}" class="rank-avatar" alt="${name}">
+                                <div class="rank-info">
+                                    <p class="name">${name} ${isCurrentUser ? '(Bạn)' : ''}</p>
+                                    <p class="pts">${score.toFixed(1)} điểm</p>
+                                </div>
+                                <div class="rank-badge ${badgeClass}"><i class="fa-solid fa-crown"></i></div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Leaderboard error:', error);
             }
         }
 
-        // Show default result (when submitted without login)
-        function showDefaultResult() {
-            document.getElementById('scoreCircle').classList.add('good');
-            document.getElementById('scoreIcon').textContent = '✓';
-            document.getElementById('scoreNumber').textContent = '--';
-            document.getElementById('resultTitle').textContent = 'Đã nộp bài!';
-            document.getElementById('resultSubtitle').textContent = 'Bài làm của bạn đã được ghi nhận';
-            
-            document.getElementById('studentInfo').style.display = 'none';
-            
-            document.getElementById('resultMessage').className = 'message info';
-            document.getElementById('resultMessage').innerHTML = '📬 <strong>Bài làm đã được nộp!</strong><br>Giáo viên sẽ xem và chấm điểm sau.';
-            
-            document.getElementById('stats').style.display = 'none';
+        // Get initials from name
+        function getInitials(name) {
+            if (!name) return '?';
+            const parts = name.split(' ');
+            if (parts.length >= 2) {
+                return (parts[parts.length - 2][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.charAt(0).toUpperCase();
+        }
+
+        // Calculate time spent
+        function calculateTimeSpent(answers) {
+            // If answers object has thoi_gian_lam_bai property
+            if (answers.thoi_gian_lam_bai) {
+                const seconds = answers.thoi_gian_lam_bai;
+                const h = Math.floor(seconds / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+                
+                if (h > 0) {
+                    return `${h} giờ ${m} phút`;
+                } else if (m > 0) {
+                    return `${m} phút ${s} giây`;
+                } else {
+                    return `${s} giây`;
+                }
+            }
+            return 'N/A';
+        }
+
+        // Copy rank function
+        function copyRank() {
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.innerHTML;
+
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Đã sao chép';
+            btn.style.backgroundColor = '#d1fae5';
+            btn.style.color = '#059669';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.backgroundColor = '#eef2ff';
+                btn.style.color = '#1a44a0';
+            }, 2000);
         }
 
         // Format datetime

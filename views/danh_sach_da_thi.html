@@ -830,11 +830,221 @@
     </div>
 
     <script>
+        // Get exam ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ma_de = urlParams.get('ma_de');
+        let examData = null;
+        let submissions = [];
+
+        // Load exam data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (ma_de) {
+                loadExamData();
+                loadSubmissions();
+            } else {
+                alert('Không tìm thấy mã đề thi');
+                window.location.href = 'trang_admin.html';
+            }
+        });
+
+        // Load exam information
+        async function loadExamData() {
+            try {
+                const response = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${ma_de}`);
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    examData = result.data;
+                    updateExamInfo(examData);
+                } else {
+                    alert('Không tìm thấy đề thi');
+                    window.location.href = 'trang_admin.html';
+                }
+            } catch (error) {
+                console.error('Load exam error:', error);
+            }
+        }
+
+        // Update exam info display
+        function updateExamInfo(exam) {
+            // Update class name (exam title)
+            document.querySelector('.class-name span:last-child').textContent = exam.ten_de;
+            
+            // Update creation date
+            const ngayTao = new Date(exam.ngay_tao);
+            document.querySelector('.info-item:nth-child(2) span:last-child').textContent = 
+                `Ngày tạo: ${formatDate(ngayTao)}`;
+            
+            // Update teacher name
+            document.querySelector('.info-item:nth-child(3) span:last-child').textContent = 
+                `Người tạo: ${exam.giao_vien || 'Giáo viên'}`;
+        }
+
+        // Load submissions
+        async function loadSubmissions() {
+            try {
+                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submissions&ma_de=${ma_de}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    submissions = result.data;
+                    document.querySelector('.info-item:nth-child(4) span:last-child').textContent = 
+                        `Số lượt làm: ${submissions.length}`;
+                    renderStudents(submissions);
+                }
+            } catch (error) {
+                console.error('Load submissions error:', error);
+            }
+        }
+
+        // Render students grid
+        function renderStudents(submissions) {
+            const container = document.querySelector('.students-grid');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #999;">
+                        <p style="font-size: 48px; margin-bottom: 10px;">📝</p>
+                        <p>Chưa có bài làm nào</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = submissions.map((submission, index) => {
+                const initials = getInitials(submission.ten_hoc_sinh || 'Học sinh');
+                const gradient = getGradientColor(index);
+                const diem = submission.diem || 0;
+                const thoiGianNop = new Date(submission.thoi_gian_nop);
+                
+                // Parse answers if available
+                let thoiGianLamBai = 'N/A';
+                if (submission.danh_sach_dap_an) {
+                    try {
+                        const answers = JSON.parse(submission.danh_sach_dap_an);
+                        if (answers.thoi_gian_lam_bai) {
+                            thoiGianLamBai = formatTimeTaken(answers.thoi_gian_lam_bai);
+                        }
+                    } catch (e) {}
+                }
+
+                return `
+                    <div class="student-card" onclick="viewStudentDetail('${submission.ma_bai_lam}')">
+                        <div class="student-header">
+                            <div class="student-avatar" style="background: ${gradient};">${initials}</div>
+                            <div>
+                                <div class="student-name">${submission.ten_hoc_sinh || 'Học sinh ẩn danh'}</div>
+                                <div class="student-score-label">Điểm:</div>
+                                <div class="student-score">${diem} điểm</div>
+                            </div>
+                        </div>
+
+                        <div class="student-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Thời gian làm bài:</span>
+                                <span class="detail-value">${thoiGianLamBai}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Thời gian nộp bài:</span>
+                                <span class="detail-value">${formatDateTime(thoiGianNop)}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Email:</span>
+                                <span class="detail-value">${submission.email || 'Không có'}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Nhận xét:</span>
+                                <span class="edit-link" onclick="editComment('${submission.ma_bai_lam}')">✏️</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Helper: Get initials from name
+        function getInitials(name) {
+            if (!name) return 'HS';
+            const parts = name.split(' ');
+            if (parts.length >= 2) {
+                return (parts[parts.length - 2][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return name.charAt(0).toUpperCase();
+        }
+
+        // Helper: Get gradient color
+        function getGradientColor(index) {
+            const gradients = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)'
+            ];
+            return gradients[index % gradients.length];
+        }
+
+        // Helper: Format date
+        function formatDate(date) {
+            return date.toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Helper: Format datetime
+        function formatDateTime(date) {
+            return date.toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Helper: Format time taken
+        function formatTimeTaken(seconds) {
+            if (!seconds) return 'N/A';
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            
+            if (h > 0) {
+                return `${h} giờ ${m} phút ${s} giây`;
+            } else if (m > 0) {
+                return `${m} phút ${s} giây`;
+            } else {
+                return `${s} giây`;
+            }
+        }
+
+        // Edit comment
+        function editComment(ma_bai_lam) {
+            event.stopPropagation();
+            const comment = prompt('Nhập nhận xét cho bài làm này:');
+            if (comment !== null) {
+                alert('Đã lưu nhận xét');
+                // TODO: Save to database
+            }
+        }
+
+        // View student detail
+        function viewStudentDetail(ma_bai_lam) {
+            window.location.href = `xem_chi_tiet.html?ma_bai_lam=${ma_bai_lam}`;
+        }
+
         // Copy Link
         function copyLink() {
-            const text = 'https://azota.vn/class/abc123def456';
+            const text = window.location.origin + '/vinhzota/views/trang_lam.html?code=' + (examData?.ma_code || '');
             navigator.clipboard.writeText(text);
-            alert('Đã sao chép liên kết lớp!');
+            alert('Đã sao chép liên kết!');
         }
 
         // Copy QR
@@ -910,9 +1120,28 @@
         document.querySelector('input[type="text"]').addEventListener('keyup', function(e) {
             const query = e.target.value.toLowerCase();
             document.querySelectorAll('.student-card').forEach(card => {
-                const name = card.querySelector('.student-name').textContent.toLowerCase();
-                card.style.display = name.includes(query) ? 'block' : 'none';
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
             });
+        });
+
+        // Menu item clicks - keep existing UI behavior
+        document.querySelectorAll('.menu-item').forEach(item => {
+            if (!item.classList.contains('delete')) {
+                item.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    // Keep existing behavior
+                    console.log('Menu clicked:', text);
+                });
+            }
+        });
+
+        // Delete Menu Item
+        document.querySelector('.menu-item.delete').addEventListener('click', function() {
+            if (confirm('Bạn có chắc chắn muốn xóa đề thi này?')) {
+                // TODO: Add delete functionality
+                alert('Tính năng đang phát triển');
+            }
         });
     </script>
 </body>

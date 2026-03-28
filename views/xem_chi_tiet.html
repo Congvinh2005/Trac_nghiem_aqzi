@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Chi tiết bài thi - Học phần 2 beautifull</title>
+<title>Chi tiết bài thi - Vinhzota</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 <style>
@@ -52,12 +52,6 @@
   }
 
   .sidebar .logo {
-    width: 36px; height: 36px;
-    margin-bottom: 18px;
-  }
-  .sidebar .logo img { width: 100%; }
-
-  .sidebar .logo-svg {
     width: 36px; height: 36px;
     margin-bottom: 18px;
   }
@@ -146,10 +140,9 @@
   .flag-icon {
     width: 28px; height: 20px;
     border-radius: 3px;
-    background: linear-gradient(#da251d 50%, #da251d 50%);
+    background: #da251d;
     position: relative; overflow: hidden;
   }
-  /* Simple VN flag */
   .flag-icon::after {
     content: '⭐';
     position: absolute; top: 50%; left: 50%;
@@ -217,9 +210,6 @@
   .student-header .stu-info .stu-name {
     font-size: 14px; font-weight: 600;
     display: flex; align-items: center; gap: 5px;
-  }
-  .student-header .stu-info .stu-name .stu-badge {
-    font-size: 13px; color: var(--text-muted);
   }
   .student-header .stu-info .stu-email {
     font-size: 12px; color: var(--text-muted);
@@ -383,15 +373,110 @@
   .right-body {
     flex: 1;
     min-height: 300px;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8fafc;
+  }
+
+  .questions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .question-block {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
+    padding: 20px 22px;
+  }
+
+  .q-meta {
+    font-size: 12px; color: #999; margin-bottom: 4px;
+  }
+  .q-meta .q-num { color: #333; font-weight: 700; font-size: 13.5px; margin-right: 6px; }
+
+  .q-text {
+    font-size: 13.5px; font-weight: 600; color: #111;
+    margin-bottom: 18px; line-height: 1.55;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 28px;
+    margin-bottom: 18px;
+  }
+
+  .opt-row {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 13px; color: #333; line-height: 1.45;
+  }
+
+  .opt-letter { font-weight: 700; flex-shrink: 0; min-width: 18px; }
+
+  .answer-bar {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; margin-top: 6px;
+  }
+
+  .correct-label {
+    font-size: 13px; font-weight: 700; color: #16a34a;
+  }
+  .wrong-label {
+    font-size: 13px; font-weight: 700; color: #ef4444;
+  }
+
+  .answer-chips {
+    display: flex; gap: 0;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .chip {
+    width: 42px; height: 34px;
     display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    border-right: 1px solid #e0e0e0;
+    color: #333;
+  }
+  .chip:last-child { border-right: none; }
+
+  .chip.correct-chip {
+    color: #16a34a;
+  }
+  .chip.wrong-chip {
+    color: #ef4444;
   }
 
-  .empty-state {
-    text-align: center; color: var(--text-light); font-size: 14px;
-  }
-  .empty-state i { font-size: 36px; margin-bottom: 10px; display: block; }
+  .chip-icon { font-size: 14px; margin-right: 2px; }
 
-  /* Tooltip tag */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .status-correct {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .status-wrong {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .status-skipped {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+
   .badge-count {
     display: inline-flex; align-items: center; justify-content: center;
     background: #f1f5f9;
@@ -416,12 +501,9 @@
   </div>
   <div class="sidebar-icon active"><i class="fas fa-home"></i></div>
   <div class="sidebar-icon"><i class="fas fa-file-alt"></i></div>
-  <div class="sidebar-icon active" style="background:rgba(255,255,255,0.18)"><i class="fas fa-folder"></i></div>
+  <div class="sidebar-icon active"><i class="fas fa-folder"></i></div>
   <div class="sidebar-icon"><i class="fas fa-layer-group"></i></div>
   <div class="sidebar-icon"><i class="fas fa-users"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-book"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-landmark"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-id-card"></i></div>
   <div class="sidebar-bottom">
     <div class="sidebar-icon gear"><i class="fas fa-cog"></i></div>
   </div>
@@ -432,7 +514,7 @@
 
   <!-- TOPBAR -->
   <header class="topbar">
-    <a class="back-btn" href="#">
+    <a class="back-btn" href="javascript:window.history.back()">
       <i class="fas fa-chevron-left"></i>
       Quay lại
     </a>
@@ -446,9 +528,9 @@
       <div class="flag-icon"></div>
       <div class="notif-btn"><i class="fas fa-bell"></i></div>
       <div class="user-chip">
-        <div class="avatar">CV</div>
+        <div class="avatar" id="headerAvatar">GV</div>
         <div class="user-info">
-          <div class="name">Công Vinh</div>
+          <div class="name" id="headerName">Giáo viên</div>
           <div class="role">Giáo viên</div>
         </div>
       </div>
@@ -461,15 +543,14 @@
     <!-- LEFT PANEL -->
     <div class="left-panel">
       <div class="student-header">
-        <div class="stu-avatar">N</div>
+        <div class="stu-avatar" id="stuAvatar">-</div>
         <div class="stu-info">
-          <div class="stu-name">
-            Nguyễn Đạt
-            <span class="stu-badge"><i class="fas fa-venus-mars" style="font-size:12px;color:#94a3b8"></i></span>
+          <div class="stu-name" id="stuName">
+            Đang tải...
           </div>
           <div class="stu-email">
             <i class="fas fa-envelope" style="font-size:11px"></i>
-            nguyendat2k5nss@gmail.com
+            <span id="stuEmail">-</span>
           </div>
         </div>
       </div>
@@ -479,53 +560,53 @@
 
         <div class="info-row">
           <span class="label">Điểm:</span>
-          <span class="val score">0/210</span>
+          <span class="val score" id="scoreValue">-/210</span>
         </div>
 
         <div class="info-row">
           <span class="label">Nhận xét:</span>
-          <span class="val no-comment">Chưa có nhận xét</span>
-          <span class="edit-icon"><i class="fas fa-pen"></i></span>
+          <span class="val no-comment" id="commentText">Chưa có nhận xét</span>
+          <span class="edit-icon" onclick="editComment()"><i class="fas fa-pen"></i></span>
         </div>
 
         <div class="info-row">
           <span class="label">Thời gian làm bài:</span>
-          <span class="val">33 giây</span>
+          <span class="val" id="timeSpent">-</span>
         </div>
 
         <div class="info-row">
           <span class="label">Thời gian nộp bài:</span>
-          <span class="val">19/04/2025 20:35</span>
+          <span class="val" id="submitTime">-</span>
         </div>
 
         <div class="info-row">
           <span class="label">Trắc nghiệm:</span>
-          <span class="val">0 (0/210 câu)</span>
+          <span class="val" id="questionStats">-</span>
         </div>
 
         <div class="info-row">
           <span class="label">Giáo viên chấm:</span>
-          <span class="val">Công Vinh</span>
+          <span class="val" id="teacherName">-</span>
         </div>
 
         <div class="action-row">
           <span class="label">Xem chi tiết quá trình làm bài:</span>
-          <span class="action-icon blue"><i class="fas fa-eye"></i></span>
+          <span class="action-icon blue" onclick="viewDetailProcess()"><i class="fas fa-eye"></i></span>
         </div>
 
         <div class="action-row">
           <span class="label">Xóa bài thi và cho thi lại:</span>
-          <span class="action-icon red"><i class="fas fa-trash"></i></span>
+          <span class="action-icon red" onclick="deleteAndRetake()"><i class="fas fa-trash"></i></span>
         </div>
 
         <div class="action-row">
           <span class="label">Xóa bài thi và cấm học sinh thi:</span>
-          <span class="action-icon red"><i class="fas fa-trash"></i></span>
+          <span class="action-icon red" onclick="deleteAndBan()"><i class="fas fa-trash"></i></span>
         </div>
       </div>
 
-      <div class="view-all-btn">
-        Xem các lần Thi <span class="badge-count">1</span>
+      <div class="view-all-btn" onclick="viewAllAttempts()">
+        Xem các lần Thi <span class="badge-count" id="attemptCount">1</span>
       </div>
 
       <div class="pagination-row">
@@ -538,7 +619,7 @@
     <div class="right-panel">
       <div class="right-topbar">
         <div class="collapse-btn"><i class="fas fa-sidebar" style="font-size:12px"></i></div>
-        <div class="exam-title">Học phần 2 beautifull</div>
+        <div class="exam-title" id="examTitle">Đang tải...</div>
         <div class="right-actions">
           <button class="btn-dung">Đúng</button>
           <button class="btn-degoc">Để gốc</button>
@@ -551,9 +632,8 @@
       </div>
 
       <div class="right-body">
-        <div class="empty-state">
-          <i class="fas fa-file-alt"></i>
-          Không có dữ liệu
+        <div class="questions-container" id="questionsContainer">
+          <!-- Questions will be loaded here -->
         </div>
       </div>
     </div>
@@ -561,5 +641,240 @@
   </div>
 </div>
 
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const ma_bai_lam = urlParams.get('ma_bai_lam');
+
+let submission = null;
+let examData = null;
+let questions = [];
+let userAnswers = {};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    if (!ma_bai_lam) {
+        alert('Không tìm thấy bài làm');
+        window.location.href = 'danh_sach_da_thi.html';
+        return;
+    }
+    loadDetail();
+});
+
+// Load detail data
+async function loadDetail() {
+    try {
+        // Get submission detail
+        const subResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submission_detail&ma_bai_lam=${ma_bai_lam}`);
+        const subResult = await subResponse.json();
+
+        if (!subResult.success) {
+            alert('Không tìm thấy bài làm');
+            return;
+        }
+
+        submission = subResult.data;
+        updateStudentInfo(submission);
+
+        // Parse user answers
+        try {
+            userAnswers = JSON.parse(submission.danh_sach_dap_an || '{}');
+        } catch (e) {}
+
+        // Get exam info
+        const examResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${submission.ma_de}`);
+        const examResult = await examResponse.json();
+
+        if (examResult.success) {
+            examData = examResult.data;
+            document.getElementById('examTitle').textContent = examData.ten_de;
+        }
+
+        // Get exam questions with correct answers
+        const qResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${submission.ma_de}`);
+        const qResult = await qResponse.json();
+
+        if (qResult.success) {
+            questions = qResult.data;
+            renderQuestions();
+        }
+
+    } catch (error) {
+        console.error('Load error:', error);
+        alert('Có lỗi xảy ra');
+    }
+}
+
+// Update student info
+function updateStudentInfo(sub) {
+    const studentName = sub.ten_hoc_sinh || 'Học sinh ẩn danh';
+    const studentEmail = sub.email || '-';
+    const score = parseFloat(sub.diem) || 0;
+    const submitTime = new Date(sub.thoi_gian_nop);
+
+    // Update header
+    document.getElementById('stuName').textContent = studentName;
+    document.getElementById('stuAvatar').textContent = studentName.charAt(0).toUpperCase();
+    document.getElementById('headerAvatar').textContent = studentName.charAt(0).toUpperCase();
+    document.getElementById('stuEmail').textContent = studentEmail;
+
+    // Update stats
+    document.getElementById('scoreValue').textContent = `${score.toFixed(1)}/210`;
+    document.getElementById('submitTime').textContent = formatDateTime(submitTime);
+    document.getElementById('timeSpent').textContent = calculateTimeSpent(sub.danh_sach_dap_an);
+
+    // Calculate question stats
+    let answers = {};
+    try {
+        answers = JSON.parse(sub.danh_sach_dap_an || '{}');
+    } catch (e) {}
+
+    const totalAnswers = Object.keys(answers).length;
+    document.getElementById('questionStats').textContent = `${totalAnswers} câu`;
+
+    // Load teacher info (from session or exam)
+    if (examData && examData.giao_vien) {
+        document.getElementById('teacherName').textContent = examData.giao_vien;
+    } else {
+        document.getElementById('teacherName').textContent = 'Giáo viên';
+    }
+}
+
+// Calculate time spent
+function calculateTimeSpent(danhSachDapAn) {
+    try {
+        const answers = JSON.parse(danh_sach_dap_an || '{}');
+        if (answers.thoi_gian_lam_bai) {
+            const seconds = answers.thoi_gian_lam_bai;
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+
+            if (h > 0) return `${h} giờ ${m} phút`;
+            if (m > 0) return `${m} phút ${s} giây`;
+            return `${s} giây`;
+        }
+    } catch (e) {}
+    return 'N/A';
+}
+
+// Format datetime
+function formatDateTime(date) {
+    return date.toLocaleString('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Edit comment
+function editComment() {
+    const comment = prompt('Nhập nhận xét cho bài làm này:');
+    if (comment !== null && comment.trim() !== '') {
+        // TODO: Save to database
+        document.getElementById('commentText').textContent = comment;
+        document.getElementById('commentText').classList.remove('no-comment');
+        alert('Đã lưu nhận xét');
+    }
+}
+
+// View detail process
+function viewDetailProcess() {
+    window.location.href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+}
+
+// Delete and retake
+function deleteAndRetake() {
+    if (confirm('Bạn có chắc chắn muốn xóa bài thi này và cho học sinh thi lại?')) {
+        // TODO: Call API to delete
+        alert('Đã xóa bài thi và cho phép thi lại');
+    }
+}
+
+// Delete and ban
+function deleteAndBan() {
+    if (confirm('Bạn có chắc chắn muốn xóa bài thi và cấm học sinh này thi?')) {
+        // TODO: Call API to delete and ban
+        alert('Đã xóa bài thi và cấm thi');
+    }
+}
+
+// View all attempts
+function viewAllAttempts() {
+    alert('Tính năng đang phát triển');
+}
+
+// Render chip
+function renderChip(letter, correctAnswer, userAnswer) {
+    const isCorrect = letter === correctAnswer;
+    const isWrong = userAnswer && letter === userAnswer && !isCorrect;
+    let cls = "chip";
+    let icon = "";
+    if (isCorrect) { cls += " correct-chip"; icon = '<span class="chip-icon">✓</span>'; }
+    if (isWrong)   { cls += " wrong-chip";   icon = '<span class="chip-icon">✗</span>'; }
+    return `<div class="${cls}">${icon}${letter}</div>`;
+}
+
+// Render questions
+function renderQuestions() {
+    const container = document.getElementById('questionsContainer');
+    
+    if (questions.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-file-alt"></i>
+                Không có câu hỏi nào
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = questions.map((q, index) => {
+        const userAnswer = userAnswers[q.ma_cau_hoi];
+        const correctAnswer = q.dap_an.find(a => a.la_dung);
+        const isCorrect = userAnswer && correctAnswer && userAnswer.toUpperCase() === correctAnswer.ky_tu;
+        const isSkipped = !userAnswer;
+
+        let statusClass = 'status-correct';
+        let statusText = 'Đúng';
+        if (isSkipped) {
+            statusClass = 'status-skipped';
+            statusText = 'Bỏ qua';
+        } else if (!isCorrect) {
+            statusClass = 'status-wrong';
+            statusText = 'Sai';
+        }
+
+        const labelClass = isCorrect ? "correct-label" : "wrong-label";
+        const labelText = `Đáp án đúng: ${correctAnswer ? correctAnswer.ky_tu : 'N/A'}`;
+
+        const chips = ["A","B","C","D"].map(l =>
+            renderChip(l, correctAnswer ? correctAnswer.ky_tu : '', userAnswer)
+        ).join("");
+
+        const opts = q.dap_an.map(o => `
+            <div class="opt-row">
+                <span class="opt-letter">${o.ky_tu}.</span>
+                <span>${o.noi_dung}</span>
+            </div>`).join("");
+
+        return `
+            <div class="question-block">
+                <div class="q-meta"><span class="q-num">Câu ${index + 1}</span> ID: ${q.ma_cau_hoi}</div>
+                <div class="status-badge ${statusClass}">
+                    <i class="fas ${isCorrect ? 'fa-check-circle' : isSkipped ? 'fa-minus-circle' : 'fa-times-circle'}"></i>
+                    ${statusText}
+                </div>
+                <div class="q-text">${q.noi_dung}</div>
+                <div class="options-grid">${opts}</div>
+                <div class="answer-bar">
+                    <span class="${labelClass}">${labelText}</span>
+                    <div class="answer-chips">${chips}</div>
+                </div>
+            </div>`;
+    }).join("");
+}
+</script>
 </body>
 </html>

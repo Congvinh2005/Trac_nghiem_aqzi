@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kết quả bài thi</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    color: #222;
+    font-size: 13.5px;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── LEFT SIDEBAR (icon nav) ── */
+  .icon-nav {
+    width: 68px;
+    background: #1e3a8a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .icon-nav .logo {
+    width: 68px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    background: #1e40af;
+  }
+
+  .icon-nav .logo svg { width: 30px; height: 30px; color: #fff; }
+
+  .nav-icons {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 4px; padding: 12px 0; flex: 1;
+  }
+
+  .nav-icon-btn {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: none; background: transparent;
+    color: #93c5fd;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .15s;
+  }
+  .nav-icon-btn:hover { background: rgba(255,255,255,.12); }
+  .nav-icon-btn.active { background: rgba(255,255,255,.18); color: #fff; }
+  .nav-icon-btn svg { width: 20px; height: 20px; }
+
+  .nav-bottom {
+    padding: 14px 0;
+  }
+
+  /* ── CONTENT WRAPPER ── */
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    height: 52px;
+    background: #1e3a8a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+
+  .btn-back {
+    display: flex; align-items: center; gap: 6px;
+    color: #fff; font-size: 13px;
+    background: none; border: none; cursor: pointer;
+  }
+  .btn-back:hover { opacity: .8; }
+  .btn-back svg { width: 16px; height: 16px; }
+
+  .top-right {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .btn-premium {
+    background: #06b6d4; color: #fff;
+    border: none; border-radius: 8px;
+    padding: 7px 14px; font-size: 12.5px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+  }
+
+  .flag { width: 26px; height: 18px; border-radius: 3px; overflow: hidden; }
+  .flag img { width: 100%; height: 100%; object-fit: cover; }
+
+  .notif-btn {
+    background: none; border: none; cursor: pointer;
+    color: #93c5fd; display: flex; align-items: center;
+  }
+  .notif-btn svg { width: 18px; height: 18px; }
+
+  .user-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #3b82f6; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+
+  .user-info { line-height: 1.3; }
+  .user-info .name { color: #fff; font-size: 13px; font-weight: 600; }
+  .user-info .role { color: #93c5fd; font-size: 11.5px; }
+
+  /* ── MAIN AREA ── */
+  .main-area {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    width: 320px;
+    padding: 18px 16px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    border-right: 1px solid #e0e0e0;
+    background: #f8f9fb;
+  }
+
+  .score-box {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  .score-title {
+    font-size: 18px; font-weight: 700; color: #222; margin-bottom: 14px;
+  }
+
+  .detail-box {
+    background: #f4f6fb;
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+
+  .detail-title {
+    font-size: 12.5px; font-weight: 700; color: #333; margin-bottom: 10px;
+  }
+
+  .detail-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 6px; font-size: 12.5px; color: #555;
+  }
+  .detail-row:last-child { margin-bottom: 0; }
+  .detail-row .val { color: #222; font-weight: 500; }
+
+  .link-btn {
+    background: none; border: none; color: #1a6ef5;
+    font-size: 12.5px; cursor: pointer; padding: 0;
+    text-decoration: underline; margin-top: 8px;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  /* ── CONTENT TOP BAR ── */
+  .content-topbar {
+    display: flex; align-items: center;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    padding: 0 20px;
+    height: 48px;
+    position: sticky; top: 0; z-index: 10;
+  }
+
+  .sidebar-toggle {
+    background: none; border: none; cursor: pointer;
+    color: #777; display: flex; align-items: center; padding: 6px;
+    border-radius: 6px; margin-right: 12px;
+  }
+  .sidebar-toggle:hover { background: #f0f0f0; }
+  .sidebar-toggle svg { width: 18px; height: 18px; }
+
+  .content-title {
+    flex: 1; text-align: center;
+    font-size: 14px; font-weight: 600; color: #333;
+  }
+
+  .content-tags { display: flex; gap: 8px; }
+
+  .tag {
+    border-radius: 6px; padding: 5px 12px;
+    font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+  }
+  .tag-correct { background: #16a34a; color: #fff; }
+  .tag-wrong { background: #ef4444; color: #fff; }
+  .tag-outline {
+    background: transparent; color: #555;
+    border: 1px solid #ccc;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; border-bottom: 1px solid #e8e8e8;
+    background: #fff; padding: 0 20px;
+  }
+
+  .tab {
+    padding: 10px 0; margin-right: 24px;
+    font-size: 13.5px; color: #777;
+    border-bottom: 2px solid transparent;
+    cursor: pointer; font-weight: 500;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .tab.active {
+    color: #1a6ef5;
+    border-bottom-color: #1a6ef5;
+    font-weight: 600;
+  }
+
+  /* ── QUESTIONS ── */
+  .questions-area { padding: 20px 24px; }
+
+  .question-block {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+
+  .q-meta {
+    font-size: 12px; color: #999; margin-bottom: 4px;
+  }
+  .q-meta .q-num { color: #333; font-weight: 700; font-size: 13.5px; margin-right: 6px; }
+
+  .q-text {
+    font-size: 13.5px; font-weight: 600; color: #111;
+    margin-bottom: 18px; line-height: 1.55;
+  }
+
+  /* 2-column options grid */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 28px;
+    margin-bottom: 18px;
+  }
+
+  .opt-row {
+    display: flex; gap: 8px; align-items: flex-start;
+    font-size: 13px; color: #333; line-height: 1.45;
+  }
+
+  .opt-letter { font-weight: 700; flex-shrink: 0; min-width: 18px; }
+
+  /* ── ANSWER BAR ── */
+  .answer-bar {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; margin-top: 6px;
+  }
+
+  .correct-label {
+    font-size: 13px; font-weight: 700; color: #16a34a;
+  }
+  .wrong-label {
+    font-size: 13px; font-weight: 700; color: #ef4444;
+  }
+
+  .answer-chips {
+    display: flex; gap: 0;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .chip {
+    width: 42px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600;
+    border-right: 1px solid #e0e0e0;
+    color: #333;
+  }
+  .chip:last-child { border-right: none; }
+
+  .chip.correct-chip {
+    color: #16a34a;
+  }
+  .chip.wrong-chip {
+    color: #ef4444;
+  }
+
+  .chip-icon { font-size: 14px; margin-right: 2px; }
+</style>
+</head>
+<body>
+
+<!-- ICON NAV -->
+<nav class="icon-nav">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <div class="nav-icons">
+    <button class="nav-icon-btn active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
+    <button class="nav-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </button>
+  </div>
+  <div class="nav-bottom">
+    <button class="nav-icon-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- CONTENT WRAPPER -->
+<div class="content-wrapper">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <button class="btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Quay lại
+    </button>
+    <div class="top-right">
+      <button class="btn-premium">
+        💎 Bỏ quảng cáo
+      </button>
+      <!-- Vietnam flag -->
+      <div style="width:26px;height:18px;border-radius:3px;background:#da251d;display:flex;align-items:center;justify-content:center;">
+        <span style="color:#ffcd00;font-size:12px;">★</span>
+      </div>
+      <button class="notif-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="user-avatar">dv</div>
+      <div class="user-info">
+        <div class="name">dv vinh</div>
+        <div class="role">Học sinh</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="score-box">
+        <div class="score-title">Điểm:&nbsp; 2/210</div>
+        <div class="detail-box">
+          <div class="detail-title">Thông tin chi tiết</div>
+          <div class="detail-row">
+            <span>Thời gian làm bài:</span>
+            <span class="val">12 Giây</span>
+          </div>
+          <div class="detail-row">
+            <span>Thời gian nộp bài:</span>
+            <span class="val">28/03/2026 22:43</span>
+          </div>
+          <div class="detail-row">
+            <span>Trắc nghiệm:</span>
+            <span class="val">2 (2/210 câu)</span>
+          </div>
+          <div class="detail-row">
+            <span>Xem chi tiết quá trình làm bài:</span>
+            <span class="val">🕐</span>
+          </div>
+          <button class="link-btn">Copy link gửi giáo viên</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+      <!-- CONTENT TOP BAR -->
+      <div class="content-topbar">
+        <button class="sidebar-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        </button>
+        <div class="content-title">Học phần 2 beautifull</div>
+        <div class="content-tags">
+          <button class="tag tag-correct">Đúng &amp; sai</button>
+          <button class="tag tag-wrong">Đề đảo</button>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active">Trắc nghiệm</button>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div class="questions-area" id="questionsArea"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const questions = [
+  {
+    num: 1,
+    id: "331988577",
+    text: 'Một trong những giải pháp phòng chống chiến lược "diễn biến hòa bình". bạo loạn lật đổ:',
+    options: [
+      { letter: "A", text: "Chăm lo xây dựng lực lượng vũ trang ở địa phương vững mạnh" },
+      { letter: "B", text: "Xây dựng hệ thống chính trị cả nước vững mạnh toàn diện" },
+      { letter: "C", text: "Đẩy mạnh công nghiệp hóa hiện đại hóa. chống tụt hậu kinh tế" },
+      { letter: "D", text: "Xây dựng lòng yêu nước cho tuổi trẻ nhất là học sinh. sinh viên" },
+    ],
+    correctAnswer: "A",
+    userAnswer: "A",
+    isCorrect: true,
+  },
+  {
+    num: 2,
+    id: "331988578",
+    text: '"Bạo loạn lật đổ" là thủ đoạn gắn liền với:',
+    options: [
+      { letter: "A", text: 'Chiến lược "Diễn biến hòa bình"' },
+      { letter: "B", text: 'Biện pháp "Ngăn chặn chủ nghĩa cộng sản"' },
+      { letter: "C", text: 'Chiến lược "Phi quân sự"' },
+      { letter: "D", text: 'Chính sách "Cấm vận kinh tế. cô lập ngoại giao"' },
+    ],
+    correctAnswer: "A",
+    userAnswer: "B",
+    isCorrect: false,
+  },
+  {
+    num: 3,
+    id: "331988579",
+    text: "Nhiệm vụ cấp bách hàng đầu trong các nhiệm vụ QPAN ở nước ta là:",
+    options: [
+      { letter: "A", text: 'Phòng chống chiến lược "Diễn biến hòa bình". bạo loạn lật đổ' },
+      { letter: "B", text: "Phòng chống địch tiến công hỏa lực bằng vũ khí công nghệ cao" },
+      { letter: "C", text: "Phòng chống địch lợi dụng vấn đề dân tộc. tôn giáo" },
+      { letter: "D", text: "Phòng chống tội phạm. tệ nạn xã hội và bảo vệ an ninh quốc gia" },
+    ],
+    correctAnswer: "A",
+    userAnswer: "C",
+    isCorrect: false,
+  },
+  {
+    num: 4,
+    id: "331988580",
+    text: "Chiến tranh nhân dân Việt Nam được xây dựng trên nền tảng nào?",
+    options: [
+      { letter: "A", text: "Sức mạnh kinh tế quốc gia vững mạnh" },
+      { letter: "B", text: "Lực lượng vũ trang ba thứ quân làm nòng cốt" },
+      { letter: "C", text: "Khối đại đoàn kết toàn dân tộc" },
+      { letter: "D", text: "Sự ủng hộ của quốc tế và bạn bè năm châu" },
+    ],
+    correctAnswer: "C",
+    userAnswer: "A",
+    isCorrect: false,
+  },
+];
+
+function renderChip(letter, correctAnswer, userAnswer) {
+  const isCorrect = letter === correctAnswer;
+  const isWrong = letter === userAnswer && !isCorrect;
+  let cls = "chip";
+  let icon = "";
+  if (isCorrect) { cls += " correct-chip"; icon = '<span class="chip-icon">✓</span>'; }
+  if (isWrong)   { cls += " wrong-chip";   icon = '<span class="chip-icon">✗</span>'; }
+  return `<div class="${cls}">${icon}${letter}</div>`;
+}
+
+function renderQuestions() {
+  const area = document.getElementById("questionsArea");
+  area.innerHTML = questions.map(q => {
+    const labelClass = q.isCorrect ? "correct-label" : "wrong-label";
+    const labelText  = `Đáp án đúng: ${q.correctAnswer}`;
+
+    const chips = ["A","B","C","D"].map(l =>
+      renderChip(l, q.correctAnswer, q.userAnswer)
+    ).join("");
+
+    // Split options into 2 rows × 2 cols
+    const opts = q.options.map(o => `
+      <div class="opt-row">
+        <span class="opt-letter">${o.letter}.</span>
+        <span>${o.text}</span>
+      </div>`).join("");
+
+    return `
+      <div class="question-block">
+        <div class="q-meta"><span class="q-num">Câu ${q.num}</span> ID: ${q.id}</div>
+        <div class="q-text">${q.text}</div>
+        <div class="options-grid">${opts}</div>
+        <div class="answer-bar">
+          <span class="${labelClass}">${labelText}</span>
+          <div class="answer-chips">${chips}</div>
+        </div>
+      </div>`;
+  }).join("");
+}
+
+renderQuestions();
+</script>
+</body>
+</html>

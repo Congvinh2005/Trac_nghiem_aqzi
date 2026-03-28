@@ -105,7 +105,7 @@
             background: white;
             border-radius: 12px;
             padding: 30px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: auto;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -115,6 +115,28 @@
             font-weight: 600;
             margin-bottom: 25px;
             color: #333;
+        }
+
+        /* Two-column layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 7fr 3fr;
+            gap: 30px;
+        }
+
+        .left-column {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .right-column {
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+            padding-left: 15px;
+            border-left: 2px solid #f0f0f0;
         }
 
         /* Form */
@@ -257,39 +279,76 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
+            padding: 12px;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         .answer-item:hover {
             border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(4px);
         }
 
         .answer-item.correct {
-            border-color: #10b981;
-            background: #d1fae5;
+            border-color: #3b82f6 !important;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.45);
+            transform: scale(1.02);
+        }
+
+        .answer-item.correct:hover {
+            border-color: #2563eb !important;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
         }
 
         .answer-letter {
-            width: 28px;
-            height: 28px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 13px;
+            font-weight: 700;
+            font-size: 16px;
             color: #666;
+            flex-shrink: 0;
+            transition: all 0.3s;
         }
 
         .answer-item.correct .answer-letter {
-            background: #10b981;
-            color: white;
+            background: white !important;
+            color: #2563eb !important;
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .answer-text {
+            flex: 1;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .answer-item.correct .answer-text {
+            color: white !important;
+            font-weight: 600;
+        }
+
+        .correct-badge {
+            font-size: 12px;
+            padding: 4px 10px;
+            background: white;
+            color: #2563eb;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
         }
 
         .answer-text {
@@ -300,10 +359,10 @@
         .correct-badge {
             font-size: 11px;
             padding: 2px 8px;
-            background: #10b981;
-            color: white;
+            background: white;
+            color: #2563eb;
             border-radius: 10px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         /* Footer */
@@ -384,6 +443,29 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .left-column {
+                position: static;
+                max-height: none;
+                overflow: visible;
+                padding-right: 0;
+            }
+
+            .right-column {
+                max-height: none;
+                overflow: visible;
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid #f0f0f0;
+                padding-top: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 60px;
@@ -424,77 +506,87 @@
     <div class="main">
         <div class="card">
             <h1 class="title">TẠO ĐỀ THI MỚI</h1>
+            
+            <div class="two-columns">
+                <!-- Left Column - Questions List -->
+                <div class="left-column">
+                    <div class="questions-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="font-size: 16px;">Danh sách câu hỏi</h3>
+                            <span id="questionCount" style="color: #667eea; font-weight: 600;">0 câu hỏi</span>
+                        </div>
 
-            <!-- Basic Info -->
-            <label>Tên đề thi *</label>
-            <input type="text" id="examTitle" placeholder="Nhập tên đề thi">
-
-            <div class="row">
-                <div>
-                    <label>Thời gian nộp</label>
-                    <input type="datetime-local" id="examDeadline">
-                </div>
-                <div>
-                    <label>Mã code</label>
-                    <input type="text" id="examCode" readonly style="background: #f5f5f5;">
-                </div>
-            </div>
-
-            <!-- Upload -->
-            <label>Nội dung</label>
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📄</div>
-                <div class="upload-text">Kéo thả file vào đây hoặc click để chọn</div>
-                <div class="upload-hint">Hỗ trợ file .txt (Format: 1.Câu hỏi? A. Đáp án A B. Đáp án B...)</div>
-                <input type="file" id="fileInput" accept=".txt,.csv" style="display: none;">
-            </div>
-
-            <!-- Questions -->
-            <div class="questions-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="font-size: 16px;">Danh sách câu hỏi</h3>
-                    <span id="questionCount" style="color: #667eea; font-weight: 600;">0 câu hỏi</span>
-                </div>
-
-                <div id="questionsList">
-                    <div class="empty-questions" id="emptyQuestions">
-                        <p>📝</p>
-                        <p>Chưa có câu hỏi nào</p>
-                        <p style="font-size: 13px; margin-top: 10px;">Upload file để tự động tạo câu hỏi</p>
+                        <div id="questionsList">
+                            <div class="empty-questions" id="emptyQuestions">
+                                <p>📝</p>
+                                <p>Chưa có câu hỏi nào</p>
+                                <p style="font-size: 13px; margin-top: 10px;">Upload file để tự động tạo câu hỏi</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Options -->
-            <div class="row" style="margin-top: 20px;">
-                <div>
-                    <label>Cho xem kết quả</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="showResult" value="no"> Không
-                        </label>
-                        <label>
-                            <input type="radio" name="showResult" value="yes" checked> Có
-                        </label>
+                <!-- Right Column - Form & Upload -->
+                <div class="right-column">
+                    <!-- Basic Info -->
+                    <label>Tên đề thi *</label>
+                    <input type="text" id="examTitle" placeholder="Nhập tên đề thi">
+
+                    <div class="row">
+                        <div>
+                            <label>Thời gian nộp</label>
+                            <input type="datetime-local" id="examDeadline">
+                        </div>
+                        <div>
+                            <label>Mã code</label>
+                            <input type="text" id="examCode" readonly style="background: #f5f5f5;">
+                        </div>
+                    </div>
+
+                    <!-- Upload -->
+                    <label>Nội dung</label>
+                    <div class="upload-area" id="uploadArea">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Kéo thả file vào đây hoặc click để chọn</div>
+                        <div class="upload-hint">Hỗ trợ file .txt, .doc, .docx</div>
+                        <div class="upload-hint" style="margin-top: 8px; font-size: 12px; color: #666;">
+                            Format: 1.Câu hỏi? <br> A. Nội dung A <br> B. Nội dung B <br> C. Nội dung C <br> D. Nội dung D
+                        </div>
+                        <input type="file" id="fileInput" accept=".txt,.csv,.doc,.docx" style="display: none;">
+                    </div>
+
+                    <!-- Options -->
+                    <div class="row" style="margin-top: 20px;">
+                        <div>
+                            <label>Cho xem kết quả</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="showResult" value="no"> Không
+                                </label>
+                                <label>
+                                    <input type="radio" name="showResult" value="yes" checked> Có
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label>Yêu cầu đăng nhập</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="requireLogin" value="no" checked> Không
+                                </label>
+                                <label>
+                                    <input type="radio" name="requireLogin" value="yes"> Có
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="footer">
+                        <button class="btn btn-secondary" onclick="window.location.href='trang_admin.html'">Hủy</button>
+                        <button class="btn btn-success" id="saveBtn" onclick="saveExam()">💾 Lưu và chia sẻ</button>
                     </div>
                 </div>
-                <div>
-                    <label>Yêu cầu đăng nhập</label>
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" name="requireLogin" value="no" checked> Không
-                        </label>
-                        <label>
-                            <input type="radio" name="requireLogin" value="yes"> Có
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                <button class="btn btn-secondary" onclick="window.location.href='trang_admin.html'">Hủy</button>
-                <button class="btn btn-success" id="saveBtn" onclick="saveExam()">💾 Lưu và chia sẻ</button>
             </div>
         </div>
     </div>
@@ -575,19 +667,20 @@
         // Render questions
         function renderQuestions() {
             const container = document.getElementById('questionsList');
-            const emptyState = document.getElementById('emptyQuestions');
             const countLabel = document.getElementById('questionCount');
 
             countLabel.textContent = `${questions.length} câu hỏi`;
 
             if (questions.length === 0) {
-                emptyState.style.display = 'block';
-                container.innerHTML = '';
-                container.appendChild(emptyState);
+                container.innerHTML = `
+                    <div class="empty-questions" id="emptyQuestions">
+                        <p>📝</p>
+                        <p>Chưa có câu hỏi nào</p>
+                        <p style="font-size: 13px; margin-top: 10px;">Upload file để tự động tạo câu hỏi</p>
+                    </div>`;
                 return;
             }
 
-            emptyState.style.display = 'none';
             container.innerHTML = questions.map((q, index) => `
                 <div class="question-item">
                     <div class="question-header">
@@ -598,14 +691,18 @@
                     </div>
                     <div class="question-content">
                         <div class="question-text">${q.noi_dung}</div>
+                        <div style="font-size: 12px; color: #667eea; margin-top: 8px; font-weight: 500;">
+                            💡 Click vào đáp án để chọn đáp án đúng
+                        </div>
                     </div>
                     <div class="answers-list">
                         ${q.dap_an.map((a, aIndex) => `
-                            <div class="answer-item ${a.la_dung ? 'correct' : ''}" 
-                                 onclick="toggleCorrectAnswer(${index}, ${aIndex})">
+                            <div class="answer-item ${a.la_dung ? 'correct' : ''}"
+                                 onclick="toggleCorrectAnswer(${index}, ${aIndex})"
+                                 style="cursor: pointer;">
                                 <span class="answer-letter">${a.ky_tu}</span>
                                 <span class="answer-text">${a.noi_dung}</span>
-                                ${a.la_dung ? '<span class="correct-badge">Đúng</span>' : ''}
+                                ${a.la_dung ? '<span class="correct-badge">✓ Đúng</span>' : ''}
                             </div>
                         `).join('')}
                     </div>
@@ -615,10 +712,16 @@
 
         // Toggle correct answer
         function toggleCorrectAnswer(questionIndex, answerIndex) {
+            console.log('Before toggle:', questions[questionIndex].dap_an);
+            
             // Unmark all answers for this question
             questions[questionIndex].dap_an.forEach(a => a.la_dung = 0);
             // Mark selected answer as correct
             questions[questionIndex].dap_an[answerIndex].la_dung = 1;
+            
+            console.log('After toggle:', questions[questionIndex].dap_an);
+            
+            // Re-render to show selected answer with blue color
             renderQuestions();
         }
 
@@ -677,6 +780,8 @@
                 }
 
                 // Save questions
+                console.log('Saving questions:', JSON.stringify(questions, null, 2));
+                
                 const saveResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=save_questions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -689,9 +794,8 @@
                 const saveResult = await saveResponse.json();
 
                 if (saveResult.success) {
-                    alert('Lưu đề thi thành công!');
-                    // Redirect to share page
-                    window.location.href = `gui_bai.html?code=${ma_code}`;
+                    // Redirect to publish page
+                    window.location.href = `publish.html?ma_de=${ma_de}&ma_code=${ma_code}`;
                 } else {
                     throw new Error(saveResult.message);
                 }
