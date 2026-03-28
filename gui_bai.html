@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Bài thi - Azota</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            color: #333;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 100px;
+            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo-sidebar {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1e3c72;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .logo-sidebar:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-item {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            background: white;
+            color: #1e3c72;
+        }
+
+        .nav-spacer {
+            flex: 1;
+        }
+
+        .settings-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 100px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #1e3c72;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .language-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .notification-btn:hover {
+            color: #1e3c72;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(30, 58, 138, 0.05);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-profile:hover {
+            background: rgba(30, 58, 138, 0.1);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .exam-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .exam-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .exam-code {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .code-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .code-value {
+            font-weight: 600;
+            color: #1e3c72;
+            font-size: 16px;
+        }
+
+        .qr-code {
+            width: 50px;
+            height: 50px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Exam Details */
+        .exam-details {
+            margin: 40px 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .detail-icon {
+            font-size: 18px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: #1a1a1a;
+            text-align: right;
+        }
+
+        .detail-value.status {
+            color: #999;
+        }
+
+        .detail-value.number {
+            color: #1e3c72;
+            font-size: 16px;
+        }
+
+        .detail-value.warning {
+            color: #ff9500;
+        }
+
+        /* Button */
+        .start-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff9500 0%, #ff7500 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(0);
+        }
+
+        /* History Link */
+        .history-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .history-link a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .history-link a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+
+            .logo-sidebar,
+            .nav-item,
+            .settings-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .exam-card {
+                padding: 30px;
+            }
+
+            .header-right {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .main-content {
+                margin-left: 70px;
+            }
+
+            .logo-sidebar,
+            .nav-item,
+            .settings-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .exam-title {
+                font-size: 24px;
+            }
+
+            .header-right {
+                gap: 10px;
+            }
+
+            .language-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exam-card {
+            animation: slideIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo-sidebar" onclick="location.href='#'">Δ</div>
+        <div class="nav-item active" title="Bài thi">📚</div>
+        <div class="nav-item" title="Lớp học">👥</div>
+        <div class="nav-item" title="Thống kê">📊</div>
+        <div class="nav-spacer"></div>
+        <button class="settings-btn" title="Cài đặt">⚙️</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                ← Quay lại
+            </button>
+            <div class="header-right">
+                <button class="language-btn">
+                    🌐 Bộ quảng cáo
+                </button>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3E%3Crect fill='%23CE1126' width='24' height='8'/%3E%3Crect fill='%23FFDE00' y='8' width='24' height='8'/%3E%3C/svg%3E" alt="VN" style="width: 24px; height: auto; cursor: pointer;">
+                <div class="notification-btn">
+                    🔔
+                    <div class="notification-dot"></div>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">C</div>
+                    <div class="user-info">
+                        <div class="user-name">Công Vinh</div>
+                        <div class="user-role">Học sinh</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="exam-card">
+                <h1 class="exam-title">Học phần 2 beautiful!</h1>
+
+                <div class="exam-code">
+                    <div>
+                        <div class="code-text">Mã đề thi:</div>
+                        <div class="code-value">aq10gg</div>
+                    </div>
+                    <div class="qr-code" title="Mã QR">📱</div>
+                </div>
+
+                <div class="exam-details">
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">⏱️</span>
+                            <span>Thời gian làm bài</span>
+                        </div>
+                        <div class="detail-value status">Không giới hạn</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">📅</span>
+                            <span>Thời gian vào thi</span>
+                        </div>
+                        <div class="detail-value status">Không thời hạn</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">❓</span>
+                            <span>Số lượng câu hỏi</span>
+                        </div>
+                        <div class="detail-value number">210</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">📋</span>
+                            <span>Loại đề</span>
+                        </div>
+                        <div class="detail-value">Trắc nghiệm</div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-label">
+                            <span class="detail-icon">👥</span>
+                            <span>Tổng lượt đã làm của đề</span>
+                        </div>
+                        <div class="detail-value number">54 lượt</div>
+                    </div>
+                </div>
+
+                <button class="start-btn" onclick="startExam()">
+                    Bắt đầu thi →
+                </button>
+
+                <div class="history-link">
+                    <a href="#" onclick="showHistory(); return false;">Xem lịch sử làm bài</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start Exam
+        function startExam() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Đang tải...';
+            
+            setTimeout(() => {
+                alert('Bắt đầu bài thi - Học phần 2 beautiful!');
+                window.location.href = '#exam-in-progress';
+            }, 1500);
+        }
+
+        // Show History
+        function showHistory() {
+            alert('Xem lịch sử làm bài của đề thi này');
+        }
+
+        // Language Button
+        document.querySelector('.language-btn').addEventListener('click', function() {
+            alert('Bộ quảng cáo - Tính năng đang phát triển');
+        });
+
+        // Notification Button
+        document.querySelector('.notification-btn').addEventListener('click', function() {
+            alert('Bạn không có thông báo mới');
+        });
+
+        // User Profile
+        document.querySelector('.user-profile').addEventListener('click', function() {
+            alert('Hồ sơ người dùng - Công Vinh');
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach((item, index) => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const titles = ['Bài thi', 'Lớp học', 'Thống kê'];
+                alert(titles[index]);
+            });
+        });
+
+        // Settings
+        document.querySelector('.settings-btn').addEventListener('click', function() {
+            alert('Cài đặt - Tính năng đang phát triển');
+        });
+
+        // Vietnam Flag Click
+        document.querySelector('img[alt="VN"]').addEventListener('click', function() {
+            alert('Chuyển ngôn ngữ');
+        });
+    </script>
+</body>
+</html>

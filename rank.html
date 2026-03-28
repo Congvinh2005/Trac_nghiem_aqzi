@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Bảng xếp hạng</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #eef1f5;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 80px;
+    height: 100vh;
+    background: #2f54eb;
+    position: fixed;
+}
+
+/* HEADER */
+.header {
+    margin-left: 80px;
+    height: 60px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: url('https://i.pravatar.cc/100') center/cover;
+}
+
+/* MAIN */
+.main {
+    margin-left: 80px;
+    padding: 20px;
+}
+
+/* TITLE */
+.title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* CONTAINER */
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+/* LEFT PODIUM */
+.left {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.box {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.gold { background: #fff7e6; border: 2px solid gold; }
+.silver { background: #f0f2f5; border: 2px solid #ccc; }
+.bronze { background: #fff2e8; border: 2px solid orange; }
+
+.user {
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.score {
+    color: green;
+    font-size: 14px;
+}
+
+/* RIGHT LIST */
+.right {
+    width: 400px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #f9fafb;
+}
+
+.rank-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rank-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank-item.gold {
+    border: 2px solid gold;
+    background: #fffbe6;
+}
+
+.rank-item.silver {
+    border: 2px solid #ccc;
+}
+
+.rank-item.bronze {
+    border: 2px solid orange;
+}
+
+.time {
+    font-size: 12px;
+    color: #888;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar"></div>
+
+<!-- HEADER -->
+<div class="header">
+    <div>← Quay lại</div>
+
+    <div class="right">
+        <button>Bỏ quảng cáo</button>
+        🇻🇳
+        🔔
+        <div class="avatar"></div>
+        <div>
+            <div>Công Vinh</div>
+            <small>Học sinh</small>
+        </div>
+    </div>
+</div>
+
+<div class="main">
+
+    <div class="title">🏆 Bảng xếp hạng (20 Thí sinh)</div>
+
+    <div class="container">
+
+        <!-- LEFT PODIUM -->
+        <div class="left">
+
+            <div class="podium">
+
+                <!-- TOP 2 -->
+                <div>
+                    <div class="box silver">🥈</div>
+                    <div class="user">Dân</div>
+                    <div class="score">207 điểm</div>
+                </div>
+
+                <!-- TOP 1 -->
+                <div>
+                    <div class="box gold">🏆</div>
+                    <div class="user">Công Vinh</div>
+                    <div class="score">210 điểm</div>
+                </div>
+
+                <!-- TOP 3 -->
+                <div>
+                    <div class="box bronze">🥉</div>
+                    <div class="user">Hiepasfg</div>
+                    <div class="score">203 điểm</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT LIST -->
+        <div class="right">
+
+            <div class="rank-item gold">
+                <div class="rank-left">
+                    <div class="rank-num">1</div>
+                    <div>
+                        <b>Công Vinh</b><br>
+                        <span class="score">210 điểm</span>
+                    </div>
+                </div>
+                <div class="time">24 phút</div>
+            </div>
+
+            <div class="rank-item silver">
+                <div class="rank-left">
+                    <div class="rank-num">2</div>
+                    <div>
+                        <b>Dân</b><br>
+                        <span class="score">207 điểm</span>
+                    </div>
+                </div>
+                <div class="time">2 giờ</div>
+            </div>
+
+            <div class="rank-item bronze">
+                <div class="rank-left">
+                    <div class="rank-num">3</div>
+                    <div>
+                        <b>Hiepasfg</b><br>
+                        <span class="score">203 điểm</span>
+                    </div>
+                </div>
+                <div class="time">1 giờ</div>
+            </div>
+
+            <!-- Others -->
+            <div class="rank-item">
+                <div class="rank-left">
+                    <div class="rank-num">4</div>
+                    <div>Bell<br><span class="score">75 điểm</span></div>
+                </div>
+            </div>
+
+            <div class="rank-item">
+                <div class="rank-left">
+                    <div class="rank-num">5</div>
+                    <div>A<br><span class="score">53 điểm</span></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

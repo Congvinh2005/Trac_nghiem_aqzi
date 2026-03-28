@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chia sẻ đề thi - Vinhzota</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            animation: scaleIn 0.5s ease-out 0.2s both;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .exam-info {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .exam-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #666;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .code-section {
+            margin: 30px 0;
+        }
+
+        .code-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .code-box {
+            display: flex;
+            gap: 10px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 15px;
+        }
+
+        .code-text {
+            flex: 1;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            letter-spacing: 4px;
+            text-align: center;
+        }
+
+        .copy-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+
+        .link-section {
+            margin: 25px 0;
+        }
+
+        .link-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .link-box {
+            display: flex;
+            gap: 10px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .link-text {
+            flex: 1;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #667eea;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-qr {
+            background: #f3f4f6;
+            color: #666;
+        }
+
+        .btn-qr:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-share {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .qr-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .qr-section.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .qr-hint {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .back-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .code-text {
+                font-size: 18px;
+            }
+
+            .link-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        
+        <h1 class="title">Tạo đề thi thành công!</h1>
+        <p class="subtitle">Chia sẻ đề thi cho học sinh của bạn</p>
+
+        <div class="exam-info">
+            <div class="exam-name" id="examName">Đang tải...</div>
+            <div class="info-row">
+                <span class="info-label">Thời gian nộp:</span>
+                <span class="info-value" id="deadline">Không thời hạn</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Số câu hỏi:</span>
+                <span class="info-value" id="questionCount">0</span>
+            </div>
+        </div>
+
+        <div class="code-section">
+            <div class="code-label">Mã đề thi</div>
+            <div class="code-box">
+                <div class="code-text" id="examCode">------</div>
+                <button class="copy-btn" onclick="copyCode()">Copy</button>
+            </div>
+        </div>
+
+        <div class="link-section">
+            <div class="code-label">Link làm bài</div>
+            <div class="link-box">
+                <div class="link-text" id="examLink">...</div>
+            </div>
+            <div class="link-actions">
+                <button class="action-btn btn-qr" onclick="toggleQR()">
+                    📱 Hiển thị QR
+                </button>
+                <button class="action-btn btn-share" onclick="copyLink()">
+                    🔗 Copy Link
+                </button>
+            </div>
+        </div>
+
+        <div class="qr-section" id="qrSection">
+            <div class="qr-code">📱</div>
+            <div class="qr-hint">Quét QR code để truy cập nhanh</div>
+        </div>
+
+        <button class="back-btn" onclick="window.location.href='trang_admin.html'">
+            ← Quay lại quản lý
+        </button>
+    </div>
+
+    <div class="toast" id="toast">Đã copy!</div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const ma_code = urlParams.get('code');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            if (ma_code) {
+                loadExamInfo();
+            } else {
+                alert('Không tìm thấy mã đề thi');
+                window.location.href = 'trang_admin.html';
+            }
+        });
+
+        // Load exam info
+        async function loadExamInfo() {
+            try {
+                const response = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_code&code=${ma_code}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const exam = result.data;
+                    document.getElementById('examName').textContent = exam.ten_de;
+                    document.getElementById('examCode').textContent = exam.ma_code;
+                    document.getElementById('deadline').textContent = exam.thoi_gian_nap ? formatDateTime(exam.thoi_gian_nap) : 'Không thời hạn';
+                    
+                    // Build link
+                    const baseUrl = window.location.origin + '/vinhzota/views/trang_lam.html';
+                    const fullLink = `${baseUrl}?code=${exam.ma_code}`;
+                    document.getElementById('examLink').textContent = fullLink;
+                } else {
+                    alert('Không tìm thấy đề thi');
+                    window.location.href = 'trang_admin.html';
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+                alert('Có lỗi xảy ra');
+            }
+        }
+
+        // Copy code
+        function copyCode() {
+            const code = document.getElementById('examCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('Đã copy mã đề thi!');
+            });
+        }
+
+        // Copy link
+        function copyLink() {
+            const link = document.getElementById('examLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('Đã copy link làm bài!');
+            });
+        }
+
+        // Toggle QR
+        function toggleQR() {
+            const qrSection = document.getElementById('qrSection');
+            qrSection.classList.toggle('show');
+        }
+
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Format datetime
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+    </script>
+</body>
+</html>

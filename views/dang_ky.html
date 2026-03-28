@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký - Vinhzota</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 60px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1a1a1a;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+
+        .form-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .error-message {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-register:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: #764ba2;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 15px 20px;
+            }
+
+            .container {
+                padding: 30px 20px;
+                margin-top: 70px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="dang_nhap.html" class="logo">
+            <div class="logo-icon">V</div>
+            <span>Vinhzota</span>
+        </a>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <h1 class="title">Đăng ký</h1>
+        <p class="subtitle">Tạo tài khoản mới để bắt đầu</p>
+
+        <div style="text-align: center;">
+            <span class="role-badge" id="roleBadge">Học sinh</span>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="registerForm">
+            <input type="hidden" id="role" value="student">
+
+            <div class="form-group">
+                <label class="form-label">Tên đăng nhập <span class="required">*</span></label>
+                <input type="text" class="form-input" id="ten_user" placeholder="Nhập tên đăng nhập" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Họ và tên <span class="required">*</span></label>
+                <input type="text" class="form-input" id="full_name" placeholder="Nhập họ và tên" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="email" placeholder="email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="09xxxxxxxx">
+                </div>
+            </div>
+
+            <div class="form-group" id="schoolGroup" style="display: none;">
+                <label class="form-label">Trường học</label>
+                <input type="text" class="form-input" id="school" placeholder="Tên trường của bạn">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mật khẩu <span class="required">*</span></label>
+                <input type="password" class="form-input" id="password" placeholder="Tối thiểu 6 ký tự" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Xác nhận mật khẩu <span class="required">*</span></label>
+                <input type="password" class="form-input" id="confirm_password" placeholder="Nhập lại mật khẩu" required>
+            </div>
+
+            <button type="submit" class="btn-register" id="registerBtn">Tạo tài khoản</button>
+        </form>
+
+        <div class="back-link">
+            <a href="chon_role_dang_ky.html">← Quay lại chọn vai trò</a>
+        </div>
+    </div>
+
+    <script>
+        // Get role from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role') || 'student';
+
+        // Set role
+        document.getElementById('role').value = role;
+        document.getElementById('roleBadge').textContent = role === 'teacher' ? 'Giáo viên' : 'Học sinh';
+
+        // Show school field for students
+        if (role === 'student') {
+            document.getElementById('schoolGroup').style.display = 'block';
+        }
+
+        // Handle registration
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const ten_user = document.getElementById('ten_user').value.trim();
+            const full_name = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const school = document.getElementById('school').value.trim();
+            const password = document.getElementById('password').value;
+            const confirm_password = document.getElementById('confirm_password').value;
+            const role = document.getElementById('role').value;
+
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const registerBtn = document.getElementById('registerBtn');
+
+            // Clear messages
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+
+            // Validation
+            if (password !== confirm_password) {
+                showError('Mật khẩu xác nhận không khớp');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Mật khẩu phải có ít nhất 6 ký tự');
+                return;
+            }
+
+            // Disable button
+            registerBtn.disabled = true;
+            registerBtn.classList.add('loading');
+            registerBtn.textContent = 'Đang tạo tài khoản...';
+
+            try {
+                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ten_user,
+                        password,
+                        full_name,
+                        email,
+                        phone,
+                        school,
+                        phan_quyen: role
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    successMessage.textContent = result.message;
+                    successMessage.classList.add('show');
+                    
+                    setTimeout(() => {
+                        window.location.href = result.redirect;
+                    }, 1500);
+                } else {
+                    showError(result.message);
+                    registerBtn.disabled = false;
+                    registerBtn.classList.remove('loading');
+                    registerBtn.textContent = 'Tạo tài khoản';
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Có lỗi xảy ra, vui lòng thử lại sau');
+                registerBtn.disabled = false;
+                registerBtn.classList.remove('loading');
+                registerBtn.textContent = 'Tạo tài khoản';
+            }
+        });
+
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+
+        // Logo click
+        document.querySelector('.logo').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'dang_nhap.html';
+        });
+    </script>
+</body>
+</html>

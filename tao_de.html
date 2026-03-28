@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tạo bài tập</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 80px;
+    height: 100vh;
+    background: #2f54eb;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* Header */
+.header {
+    height: 60px;
+    background: white;
+    margin-left: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
+
+.header button {
+    margin-left: 10px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-blue {
+    background: #2f54eb;
+    color: white;
+}
+
+.btn-purple {
+    background: #722ed1;
+    color: white;
+}
+
+/* Main */
+.main {
+    margin-left: 80px;
+    padding: 20px 40px;
+}
+
+/* Card */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Title */
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Label */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Input */
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #2f54eb;
+}
+
+/* Row */
+.row {
+    display: flex;
+    gap: 10px;
+}
+
+/* Editor */
+.toolbar {
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    padding: 8px;
+    border-radius: 8px 8px 0 0;
+    background: #fafafa;
+}
+
+.editor {
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    min-height: 150px;
+    padding: 10px;
+}
+
+/* Upload button */
+.upload {
+    margin-top: 10px;
+}
+
+.upload button {
+    background: #e6f0ff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Radio */
+.radio-group {
+    margin-top: 10px;
+}
+
+.radio-group label {
+    margin-right: 20px;
+    font-weight: normal;
+}
+
+/* Error */
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Footer area */
+.footer {
+    margin-top: 20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar"></div>
+
+<div class="header">
+    <button class="btn-blue">Mua point</button>
+    <button class="btn-purple">Nâng VIP</button>
+</div>
+
+<div class="main">
+    <div class="card">
+        <div class="title">TẠO BÀI TẬP MỚI</div>
+
+        <!-- Tên -->
+        <label>Tên</label>
+        <input type="text" id="title" placeholder="Nhập tên ...">
+        <div class="error" id="error"></div>
+
+        <!-- Thời gian -->
+        <label>Thời gian nộp bài</label>
+        <div class="row">
+            <input type="datetime-local">
+            <input type="datetime-local">
+            <button onclick="resetTime()">Đặt lại</button>
+        </div>
+
+        <!-- Nội dung -->
+        <label>Nội dung</label>
+
+        <div class="upload">
+            <button>+ Thêm file bài tập</button>
+        </div>
+
+        <div class="toolbar">
+            <b>B</b> &nbsp; <i>I</i> &nbsp; ✏️ &nbsp; ☰
+        </div>
+
+        <div class="editor" contenteditable="true"></div>
+
+        <!-- Options -->
+        <label>Cho xem kết quả</label>
+        <div class="radio-group">
+            <label><input type="radio" name="result"> Không</label>
+            <label><input type="radio" name="result" checked> Có</label>
+        </div>
+
+        <label>Đăng nhập để nộp bài</label>
+        <div class="radio-group">
+            <label><input type="radio" name="login" checked> Không</label>
+            <label><input type="radio" name="login"> Có</label>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <button class="btn-blue" onclick="submitForm()">Tạo bài tập</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function submitForm() {
+    let title = document.getElementById("title").value;
+    let error = document.getElementById("error");
+
+    if (title.trim() === "") {
+        error.innerText = "Vui lòng nhập tên bài tập";
+        return;
+    }
+
+    error.innerText = "";
+    alert("Tạo bài tập thành công!");
+}
+
+function resetTime() {
+    document.querySelectorAll("input[type='datetime-local']")
+        .forEach(i => i.value = "");
+}
+</script>
+
+</body>
+</html>

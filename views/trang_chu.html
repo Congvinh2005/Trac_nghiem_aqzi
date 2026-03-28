@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Vinhzota</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fb;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+        }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .welcome {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .welcome h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .welcome p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-section {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">V</div>
+            <span>Vinhzota</span>
+        </div>
+        <div class="user-menu">
+            <span id="userName">Học sinh</span>
+            <div class="avatar" id="userAvatar">H</div>
+            <button class="btn" onclick="logout()" style="background: rgba(255,255,255,0.2);">Đăng xuất</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="welcome">
+            <h1>🎓 Chào mừng đến với Vinhzota</h1>
+            <p>Nhập mã đề thi để bắt đầu làm bài</p>
+            
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="text" id="examCode" placeholder="Nhập mã đề thi (ví dụ: abc123)" maxlength="6">
+                    <button class="btn" onclick="startExam()">Bắt đầu làm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check auth
+        async function checkAuth() {
+            try {
+                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const result = await response.json();
+
+                if (!result.authenticated) {
+                    window.location.href = 'dang_nhap.html';
+                    return;
+                }
+
+                document.getElementById('userName').textContent = result.user.full_name;
+                document.getElementById('userAvatar').textContent = result.user.full_name.charAt(0).toUpperCase();
+            } catch (error) {
+                console.error('Auth error:', error);
+            }
+        }
+
+        function startExam() {
+            const code = document.getElementById('examCode').value.trim().toLowerCase();
+            if (code.length !== 6) {
+                alert('Mã đề thi phải có 6 ký tự');
+                return;
+            }
+            window.location.href = `trang_lam.html?code=${code}`;
+        }
+
+        async function logout() {
+            if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
+            try {
+                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=logout');
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = result.redirect;
+                }
+            } catch (error) {
+                window.location.href = 'dang_nhap.html';
+            }
+        }
+
+        // Enter key to submit
+        document.getElementById('examCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') startExam();
+        });
+
+        checkAuth();
+    </script>
+</body>
+</html>

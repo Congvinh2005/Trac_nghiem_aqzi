@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chi tiết bài thi - Học phần 2 beautifull</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sidebar-bg: #1a3a6b;
+    --sidebar-w: 60px;
+    --topbar-h: 60px;
+    --primary: #1e5abf;
+    --primary-light: #3b82f6;
+    --accent-green: #22c55e;
+    --accent-orange: #f97316;
+    --accent-red: #ef4444;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+    --border: #e2e8f0;
+    --bg: #f1f5f9;
+    --card-bg: #ffffff;
+    --badge-blue: #2563eb;
+    --blue-vip: #38bdf8;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 0;
+    gap: 6px;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    z-index: 100;
+  }
+
+  .sidebar .logo {
+    width: 36px; height: 36px;
+    margin-bottom: 18px;
+  }
+  .sidebar .logo img { width: 100%; }
+
+  .sidebar .logo-svg {
+    width: 36px; height: 36px;
+    margin-bottom: 18px;
+  }
+
+  .sidebar-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .sidebar-icon:hover, .sidebar-icon.active {
+    background: rgba(255,255,255,0.13);
+    color: #fff;
+  }
+  .sidebar-icon.active { background: rgba(255,255,255,0.18); color: #fff; }
+
+  .sidebar-bottom { margin-top: auto; }
+  .sidebar-icon.gear { color: rgba(255,255,255,0.4); }
+
+  /* ── MAIN ── */
+  .main-wrap {
+    margin-left: var(--sidebar-w);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: var(--topbar-h);
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    gap: 12px;
+    position: sticky; top: 0;
+    z-index: 50;
+  }
+  .topbar .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-main);
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .topbar .back-btn:hover { color: var(--primary); }
+  .topbar .back-btn i { font-size: 13px; }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .btn-buy {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: background .15s;
+  }
+  .btn-buy:hover { background: #1749a0; }
+
+  .btn-vip {
+    background: linear-gradient(90deg, #38bdf8, #6366f1);
+    color: #fff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    transition: opacity .15s;
+  }
+  .btn-vip:hover { opacity: .88; }
+
+  .flag-icon {
+    width: 28px; height: 20px;
+    border-radius: 3px;
+    background: linear-gradient(#da251d 50%, #da251d 50%);
+    position: relative; overflow: hidden;
+  }
+  /* Simple VN flag */
+  .flag-icon::after {
+    content: '⭐';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 12px; color: #f5d110;
+  }
+
+  .notif-btn {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; color: var(--text-muted);
+    transition: background .15s;
+  }
+  .notif-btn:hover { background: var(--border); }
+
+  .user-chip {
+    display: flex; align-items: center; gap: 8px;
+    cursor: pointer;
+  }
+  .user-chip .avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366f1, #38bdf8);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 14px;
+    overflow: hidden;
+  }
+  .user-chip .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .user-chip .user-info { line-height: 1.2; }
+  .user-chip .user-info .name { font-size: 13px; font-weight: 600; }
+  .user-chip .user-info .role { font-size: 11px; color: var(--text-muted); }
+
+  /* ── CONTENT ── */
+  .content-area {
+    flex: 1;
+    display: flex;
+    gap: 0;
+    padding: 22px;
+    gap: 18px;
+    align-items: flex-start;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    width: 310px;
+    flex-shrink: 0;
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .student-header {
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .student-header .stu-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #fb923c, #f43f5e);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700; font-size: 18px;
+    flex-shrink: 0;
+  }
+  .student-header .stu-info .stu-name {
+    font-size: 14px; font-weight: 600;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .student-header .stu-info .stu-name .stu-badge {
+    font-size: 13px; color: var(--text-muted);
+  }
+  .student-header .stu-info .stu-email {
+    font-size: 12px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 5px;
+    margin-top: 2px;
+  }
+
+  .info-block {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-block .info-title {
+    font-size: 12px; font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    margin: -16px -18px 12px;
+    padding: 10px 18px;
+  }
+
+  .info-row {
+    display: flex; align-items: flex-start;
+    gap: 8px; margin-bottom: 10px; font-size: 13.5px;
+  }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-row .label { color: var(--text-muted); white-space: nowrap; min-width: 90px; }
+  .info-row .val { font-weight: 500; color: var(--text-main); }
+  .info-row .val.score { font-size: 17px; font-weight: 700; }
+  .info-row .val.no-comment { color: var(--accent-orange); }
+
+  .edit-icon {
+    margin-left: auto;
+    color: var(--text-light);
+    cursor: pointer; font-size: 14px;
+    transition: color .15s;
+  }
+  .edit-icon:hover { color: var(--primary); }
+
+  .action-row {
+    display: flex; align-items: center;
+    gap: 8px; margin-bottom: 10px; font-size: 13.5px;
+  }
+  .action-row .label { color: var(--text-muted); flex: 1; }
+  .action-icon {
+    cursor: pointer; font-size: 16px;
+    transition: opacity .15s;
+  }
+  .action-icon:hover { opacity: .7; }
+  .action-icon.red { color: var(--accent-red); }
+  .action-icon.blue { color: var(--primary-light); }
+
+  .view-all-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 6px;
+    padding: 11px 18px;
+    font-size: 13.5px; font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+    border-top: 1px solid var(--border);
+    transition: background .15s;
+  }
+  .view-all-btn:hover { background: #f0f4ff; }
+
+  .pagination-row {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 10px 18px;
+    border-top: 1px solid var(--border);
+  }
+  .pag-btn {
+    width: 30px; height: 30px;
+    border-radius: 8px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px; color: var(--text-muted);
+    background: #fff; transition: background .15s, color .15s;
+  }
+  .pag-btn:hover { background: #f0f4ff; color: var(--primary); }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .right-topbar {
+    display: flex; align-items: center;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 14px;
+    min-height: 52px;
+  }
+
+  .collapse-btn {
+    width: 30px; height: 30px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted); font-size: 13px;
+    transition: background .15s;
+  }
+  .collapse-btn:hover { background: #f0f4ff; }
+
+  .exam-title {
+    flex: 1; text-align: center;
+    font-size: 14px; font-weight: 600; color: var(--text-main);
+  }
+
+  .right-actions { display: flex; gap: 8px; }
+
+  .btn-dung {
+    background: var(--accent-green);
+    color: #fff; border: none;
+    padding: 6px 16px; border-radius: 7px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .btn-dung:hover { opacity: .85; }
+
+  .btn-degoc {
+    background: var(--accent-orange);
+    color: #fff; border: none;
+    padding: 6px 16px; border-radius: 7px;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .btn-degoc:hover { opacity: .85; }
+
+  .menu-btn {
+    width: 30px; height: 30px;
+    border-radius: 7px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--text-muted); font-size: 16px;
+    transition: background .15s;
+  }
+  .menu-btn:hover { background: #f0f4ff; }
+
+  /* Tabs */
+  .tabs {
+    display: flex; align-items: center;
+    padding: 0 18px;
+    border-bottom: 1px solid var(--border);
+    gap: 0;
+  }
+  .tab-item {
+    padding: 13px 16px;
+    font-size: 13.5px; font-weight: 500;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2.5px solid transparent;
+    margin-bottom: -1px;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .tab-item:hover:not(.active) { color: var(--text-main); }
+
+  .right-body {
+    flex: 1;
+    min-height: 300px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .empty-state {
+    text-align: center; color: var(--text-light); font-size: 14px;
+  }
+  .empty-state i { font-size: 36px; margin-bottom: 10px; display: block; }
+
+  /* Tooltip tag */
+  .badge-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    font-size: 11px; font-weight: 600;
+    border-radius: 999px;
+    padding: 1px 7px;
+    margin-left: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="36" height="36" rx="10" fill="white" fill-opacity="0.15"/>
+      <path d="M8 18 L18 8 L28 18 L18 28 Z" stroke="white" stroke-width="2.2" fill="none"/>
+      <path d="M18 8 L28 18" stroke="#38bdf8" stroke-width="2.2"/>
+    </svg>
+  </div>
+  <div class="sidebar-icon active"><i class="fas fa-home"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-file-alt"></i></div>
+  <div class="sidebar-icon active" style="background:rgba(255,255,255,0.18)"><i class="fas fa-folder"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-layer-group"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-users"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-book"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-landmark"></i></div>
+  <div class="sidebar-icon"><i class="fas fa-id-card"></i></div>
+  <div class="sidebar-bottom">
+    <div class="sidebar-icon gear"><i class="fas fa-cog"></i></div>
+  </div>
+</aside>
+
+<!-- MAIN WRAP -->
+<div class="main-wrap">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a class="back-btn" href="#">
+      <i class="fas fa-chevron-left"></i>
+      Quay lại
+    </a>
+    <div class="topbar-right">
+      <button class="btn-buy">
+        <i class="fas fa-coins"></i> Mua point
+      </button>
+      <button class="btn-vip">
+        <i class="fas fa-gem"></i> Nâng VIP
+      </button>
+      <div class="flag-icon"></div>
+      <div class="notif-btn"><i class="fas fa-bell"></i></div>
+      <div class="user-chip">
+        <div class="avatar">CV</div>
+        <div class="user-info">
+          <div class="name">Công Vinh</div>
+          <div class="role">Giáo viên</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content-area">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <div class="student-header">
+        <div class="stu-avatar">N</div>
+        <div class="stu-info">
+          <div class="stu-name">
+            Nguyễn Đạt
+            <span class="stu-badge"><i class="fas fa-venus-mars" style="font-size:12px;color:#94a3b8"></i></span>
+          </div>
+          <div class="stu-email">
+            <i class="fas fa-envelope" style="font-size:11px"></i>
+            nguyendat2k5nss@gmail.com
+          </div>
+        </div>
+      </div>
+
+      <div class="info-block">
+        <div class="info-title">Thông tin chi tiết</div>
+
+        <div class="info-row">
+          <span class="label">Điểm:</span>
+          <span class="val score">0/210</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Nhận xét:</span>
+          <span class="val no-comment">Chưa có nhận xét</span>
+          <span class="edit-icon"><i class="fas fa-pen"></i></span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Thời gian làm bài:</span>
+          <span class="val">33 giây</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Thời gian nộp bài:</span>
+          <span class="val">19/04/2025 20:35</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Trắc nghiệm:</span>
+          <span class="val">0 (0/210 câu)</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Giáo viên chấm:</span>
+          <span class="val">Công Vinh</span>
+        </div>
+
+        <div class="action-row">
+          <span class="label">Xem chi tiết quá trình làm bài:</span>
+          <span class="action-icon blue"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <div class="action-row">
+          <span class="label">Xóa bài thi và cho thi lại:</span>
+          <span class="action-icon red"><i class="fas fa-trash"></i></span>
+        </div>
+
+        <div class="action-row">
+          <span class="label">Xóa bài thi và cấm học sinh thi:</span>
+          <span class="action-icon red"><i class="fas fa-trash"></i></span>
+        </div>
+      </div>
+
+      <div class="view-all-btn">
+        Xem các lần Thi <span class="badge-count">1</span>
+      </div>
+
+      <div class="pagination-row">
+        <div class="pag-btn"><i class="fas fa-chevron-left"></i></div>
+        <div class="pag-btn"><i class="fas fa-chevron-right"></i></div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+      <div class="right-topbar">
+        <div class="collapse-btn"><i class="fas fa-sidebar" style="font-size:12px"></i></div>
+        <div class="exam-title">Học phần 2 beautifull</div>
+        <div class="right-actions">
+          <button class="btn-dung">Đúng</button>
+          <button class="btn-degoc">Để gốc</button>
+        </div>
+        <div class="menu-btn"><i class="fas fa-ellipsis-v"></i></div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab-item active">Trắc nghiệm</div>
+      </div>
+
+      <div class="right-body">
+        <div class="empty-state">
+          <i class="fas fa-file-alt"></i>
+          Không có dữ liệu
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
