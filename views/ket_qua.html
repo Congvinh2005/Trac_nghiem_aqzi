@@ -375,7 +375,7 @@
 
         <main class="main-content">
             <header class="top-header">
-                <button class="btn-back" onclick="window.history.back()">
+                <button class="btn-back" onclick="goBack()">
                     <i class="fa-solid fa-chevron-left"></i> Quay lại
                 </button>
                 <div class="header-right">
@@ -477,6 +477,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const ma_bai_lam = urlParams.get('ma_bai_lam');
         const cho_xem_ket_qua = urlParams.get('cho_xem_ket_qua');
+        const code = urlParams.get('code');
+
+        // Store code in sessionStorage for back navigation
+        if (code) {
+            sessionStorage.setItem('back_code', code);
+        }
 
         let submissionData = null;
 
@@ -681,6 +687,18 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
+        }
+
+        // Go back to gui_bai.html with code parameter
+        function goBack() {
+            // Try multiple sources to get the code
+            const code = urlParams.get('code') || sessionStorage.getItem('back_code');
+            if (code) {
+                window.location.href = `gui_bai.html?code=${code}`;
+            } else {
+                // Fallback: go back to gui_bai without code
+                window.location.href = 'gui_bai.html';
+            }
         }
     </script>
 </body>

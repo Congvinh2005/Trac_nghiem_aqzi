@@ -244,46 +244,6 @@
     color: #e08c00;
     font-weight: 700;
   }
-
-  /* Student Info Form */
-  .student-info {
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    border: 1px solid #e8e8e8;
-  }
-
-  .student-info h3 {
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: #333;
-  }
-
-  .form-group {
-    margin-bottom: 12px;
-  }
-
-  .form-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #555;
-    margin-bottom: 6px;
-  }
-
-  .form-group input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 13px;
-  }
-
-  .form-group input:focus {
-    outline: none;
-    border-color: #1a6ef5;
-  }
 </style>
 </head>
 <body>
@@ -330,19 +290,6 @@
 
   <!-- MAIN -->
   <main class="main" id="mainContent">
-    <!-- Student Info (if not logged in) -->
-    <div class="student-info" id="studentInfo" style="display: none;">
-      <h3>📝 Thông tin thí sinh</h3>
-      <div class="form-group">
-        <label>Họ và tên *</label>
-        <input type="text" id="studentName" placeholder="Nhập họ và tên">
-      </div>
-      <div class="form-group">
-        <label>Email (nếu có)</label>
-        <input type="email" id="studentEmail" placeholder="email@example.com">
-      </div>
-    </div>
-
     <!-- Questions will be injected here -->
   </main>
 
@@ -359,6 +306,11 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const ma_code = urlParams.get('code');
+
+// Store code in sessionStorage for later use
+if (ma_code) {
+    sessionStorage.setItem('exam_code', ma_code);
+}
 
 let exam = null;
 let questions = [];
@@ -401,17 +353,14 @@ async function loadExam() {
 
         exam = examResult.data;
         document.title = exam.ten_de;
+        console.log('Exam loaded:', exam);
+        console.log('Exam ma_code:', exam.ma_code);
 
         // Check if login required
         if (exam.yeu_cau_dang_nhap && !currentUser) {
             alert('Vui lòng đăng nhập để làm bài');
             window.location.href = 'dang_nhap.html';
             return;
-        }
-
-        // Show student info if not logged in
-        if (!currentUser) {
-            document.getElementById('studentInfo').style.display = 'block';
         }
 
         // Load questions
@@ -446,11 +395,7 @@ async function loadQuestions() {
 // Render questions
 function renderQuestions() {
     const container = document.getElementById('mainContent');
-    
-    // Keep student info if exists
-    const studentInfo = document.getElementById('studentInfo');
     container.innerHTML = '';
-    if (studentInfo) container.appendChild(studentInfo);
 
     questions.forEach((q, index) => {
         const card = document.createElement('div');
@@ -580,20 +525,6 @@ function showSubmitModal() {
 }
 
 async function submitExam() {
-    // Get student info
-    let student_info = {};
-    if (!currentUser) {
-        const name = document.getElementById('studentName').value.trim();
-        const email = document.getElementById('studentEmail').value.trim();
-
-        if (!name) {
-            alert('Vui lòng nhập họ và tên');
-            return;
-        }
-
-        student_info = { ten_hoc_sinh: name, email };
-    }
-
     try {
         const response = await fetch('/vinhzota/controllers/submission_controller.php?action=submit', {
             method: 'POST',
@@ -601,15 +532,19 @@ async function submitExam() {
             body: JSON.stringify({
                 ma_de: exam.ma_de,
                 answers,
-                student_info
+                student_info: currentUser || {}
             })
         });
 
         const result = await response.json();
 
         if (result.success) {
+            // Get code from sessionStorage to ensure it's available
+            const code = sessionStorage.getItem('exam_code') || exam.ma_code;
+            console.log('Submit result:', result);
+            console.log('Redirect code:', code);
             alert('Nộp bài thành công! Điểm: ' + result.score);
-            window.location.href = 'ket_qua.html?ma_bai_lam=' + result.ma_bai_lam;
+            window.location.href = 'ket_qua.html?ma_bai_lam=' + result.ma_bai_lam + '&code=' + code;
         } else {
             alert('Nộp bài thất bại: ' + result.message);
         }

@@ -835,9 +835,35 @@
         const ma_de = urlParams.get('ma_de');
         let examData = null;
         let submissions = [];
+        let currentUser = null;
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const result = await response.json();
+
+                if (result.authenticated && result.user) {
+                    currentUser = result.user;
+                    updateProfileUI(result.user);
+                }
+            } catch (error) {
+                console.error('Load profile error:', error);
+            }
+        }
+
+        // Update profile UI
+        function updateProfileUI(user) {
+            const fullName = user.full_name || 'User';
+            const initials = fullName.split(' ').pop().charAt(0).toUpperCase();
+            
+            document.querySelector('.avatar').textContent = initials;
+            document.querySelector('.user-name').textContent = fullName;
+        }
 
         // Load exam data on page load
         document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
             if (ma_de) {
                 loadExamData();
                 loadSubmissions();
@@ -1042,7 +1068,7 @@
 
         // Copy Link
         function copyLink() {
-            const text = window.location.origin + '/vinhzota/views/trang_lam.html?code=' + (examData?.ma_code || '');
+            const text = window.location.origin + '/vinhzota/views/gui_bai.html?code=' + (examData?.ma_code || '');
             navigator.clipboard.writeText(text);
             alert('Đã sao chép liên kết!');
         }
@@ -1089,7 +1115,11 @@
 
         // Profile Click
         document.querySelector('.profile').addEventListener('click', function() {
-            alert('Hồ sơ: Công Vinh');
+            if (currentUser) {
+                alert(`Hồ sơ: ${currentUser.full_name}\nEmail: ${currentUser.email || 'Chưa cập nhật'}\nVai trò: ${currentUser.role || 'Học sinh'}`);
+            } else {
+                alert('Hồ sơ: Chưa đăng nhập');
+            }
         });
 
         // Edit Links
