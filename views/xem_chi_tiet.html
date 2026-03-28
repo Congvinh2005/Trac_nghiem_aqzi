@@ -657,8 +657,30 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'danh_sach_da_thi.html';
         return;
     }
+    loadCurrentUser();
     loadDetail();
 });
+
+// Load current user info from session
+async function loadCurrentUser() {
+    try {
+        const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+        const result = await response.json();
+
+        if (result.authenticated && result.user) {
+            const user = result.user;
+            const displayName = user.full_name || user.ten_user || 'User';
+            const role = user.phan_quyen === 'teacher' ? 'Giáo viên' : 'Học sinh';
+            const avatarText = displayName.charAt(0).toUpperCase();
+
+            document.getElementById('headerName').textContent = displayName;
+            document.getElementById('headerAvatar').textContent = avatarText;
+            document.querySelector('.user-chip .user-info .role').textContent = role;
+        }
+    } catch (error) {
+        console.error('Error loading user:', error);
+    }
+}
 
 // Load detail data
 async function loadDetail() {
@@ -711,10 +733,9 @@ function updateStudentInfo(sub) {
     const score = parseFloat(sub.diem) || 0;
     const submitTime = new Date(sub.thoi_gian_nop);
 
-    // Update header
+    // Update student info (left panel)
     document.getElementById('stuName').textContent = studentName;
     document.getElementById('stuAvatar').textContent = studentName.charAt(0).toUpperCase();
-    document.getElementById('headerAvatar').textContent = studentName.charAt(0).toUpperCase();
     document.getElementById('stuEmail').textContent = studentEmail;
 
     // Update stats
