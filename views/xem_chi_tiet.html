@@ -514,7 +514,7 @@
 
   <!-- TOPBAR -->
   <header class="topbar">
-    <a class="back-btn" href="javascript:window.history.back()">
+    <a class="back-btn" href="javascript:goBack()">
       <i class="fas fa-chevron-left"></i>
       Quay lại
     </a>
@@ -781,7 +781,11 @@ function editComment() {
 
 // View detail process
 function viewDetailProcess() {
-    window.location.href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+    if (window.parent && window.parent.loadPage) {
+        window.parent.loadPage(`xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`);
+    } else {
+        window.location.href = `xem_dap_an.html?ma_bai_lam=${ma_bai_lam}`;
+    }
 }
 
 // Delete and retake
@@ -803,6 +807,15 @@ function deleteAndBan() {
 // View all attempts
 function viewAllAttempts() {
     alert('Tính năng đang phát triển');
+}
+
+// Back to danh sach
+function goBack() {
+    if (window.parent && window.parent.loadPage) {
+        window.parent.loadPage('danh_sach_da_thi.html');
+    } else {
+        window.history.back();
+    }
 }
 
 // Render chip

@@ -794,8 +794,8 @@
                 const saveResult = await saveResponse.json();
 
                 if (saveResult.success) {
-                    // Redirect to publish page
-                    window.location.href = `publish.html?ma_de=${ma_de}&ma_code=${ma_code}`;
+                    // Redirect to publish page in master layout
+                    window.location.href = `../master_teacher.html?page=publish.html&ma_de=${ma_de}&ma_code=${ma_code}`;
                 } else {
                     throw new Error(saveResult.message);
                 }

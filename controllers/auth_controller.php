@@ -84,11 +84,11 @@ function handleLogin($user) {
     ];
     
     // Determine redirect based on role
-    $redirect = '/vinhzota/views/';
+    $redirect = '/vinhzota/master_teacher.html';
     if ($user_data['phan_quyen'] === 'teacher') {
-        $redirect .= 'trang_admin.html';
+        $redirect = '/vinhzota/master_teacher.html';
     } else {
-        $redirect .= 'trang_chu.html';
+        $redirect = '/vinhzota/master_student.html';
     }
     
     echo json_encode([

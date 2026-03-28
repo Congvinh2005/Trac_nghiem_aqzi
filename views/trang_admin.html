@@ -424,7 +424,7 @@
 
         <!-- Action buttons -->
         <div style="margin-bottom: 20px; display: flex; gap: 10px;">
-            <button class="btn btn-green" onclick="window.location.href='tao_de.html'">+ Tạo đề thi</button>
+            <button class="btn btn-green" onclick="window.parent.loadPage('tao_de.html')">+ Tạo đề thi</button>
             <button class="btn btn-cyan">Tạo từ ngân hàng</button>
             <button class="btn btn-blue">Tạo thư mục</button>
         </div>
@@ -460,7 +460,7 @@
         <div class="empty-state" id="emptyState" style="display: none;">
             <div class="empty-state-icon">📝</div>
             <div class="empty-state-text">Chưa có đề thi nào</div>
-            <button class="btn btn-green" onclick="window.location.href='tao_de.html'">+ Tạo đề thi đầu tiên</button>
+            <button class="btn btn-green" onclick="window.parent.loadPage('tao_de.html')">+ Tạo đề thi đầu tiên</button>
         </div>
     </div>
 
@@ -542,7 +542,7 @@
 
         // View exam
         function viewExam(ma_de) {
-            window.location.href = `danh_sach_da_thi.html?ma_de=${ma_de}`;
+            window.parent.loadPage(`danh_sach_da_thi.html?ma_de=${ma_de}`);
         }
 
         // Edit exam
@@ -590,11 +590,11 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    window.location.href = result.redirect;
+                    window.location.href = '/vinhzota/views/dang_nhap.html';
                 }
             } catch (error) {
                 console.error('Logout error:', error);
-                window.location.href = 'dang_nhap.html';
+                window.location.href = '/vinhzota/views/dang_nhap.html';
             }
         }
 

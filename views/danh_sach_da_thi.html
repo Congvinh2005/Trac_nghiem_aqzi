@@ -1037,7 +1037,11 @@
 
         // View student detail
         function viewStudentDetail(ma_bai_lam) {
-            window.location.href = `xem_chi_tiet.html?ma_bai_lam=${ma_bai_lam}`;
+            if (window.parent && window.parent.loadPage) {
+                window.parent.loadPage(`xem_chi_tiet.html?ma_bai_lam=${ma_bai_lam}`);
+            } else {
+                window.location.href = `xem_chi_tiet.html?ma_bai_lam=${ma_bai_lam}`;
+            }
         }
 
         // Copy Link
@@ -1079,7 +1083,11 @@
 
         // Back Button
         document.querySelector('.back-btn').addEventListener('click', function() {
-            window.history.back();
+            if (window.parent && window.parent.loadPage) {
+                window.parent.loadPage('trang_admin.html');
+            } else {
+                window.history.back();
+            }
         });
 
         // Settings Button

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinhzota - Giáo viên</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --sidebar-bg: #1a3a6b;
+            --sidebar-w: 70px;
+            --topbar-h: 60px;
+            --primary: #1e5abf;
+            --primary-light: #3b82f6;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f1f5f9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-w);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 0;
+            gap: 6px;
+            position: fixed;
+            top: 0; left: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            width: 40px; height: 40px;
+            margin-bottom: 18px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .nav-item {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.55);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.13);
+            color: #fff;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.18);
+        }
+
+        .nav-spacer { flex: 1; }
+
+        .nav-bottom { margin-top: auto; }
+
+        /* MAIN WRAP */
+        .main-wrap {
+            margin-left: var(--sidebar-w);
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            height: var(--topbar-h);
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .page-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-premium {
+            background: linear-gradient(90deg, #38bdf8, #6366f1);
+            color: #fff;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .flag-icon {
+            width: 28px; height: 20px;
+            border-radius: 3px;
+            background: #da251d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flag-icon::after {
+            content: '⭐';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 12px;
+            color: #f5d110;
+        }
+
+        .notif-btn {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .notif-btn:hover { background: var(--border); }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-info .name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-info .role {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* CONTENT IFRAME */
+        .content-frame {
+            flex: 1;
+            border: none;
+            width: 100%;
+            height: calc(100vh - var(--topbar-h));
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="logo" onclick="loadPage('trang_admin.html')">V</div>
+    
+    <nav class="nav-items">
+        <div class="nav-item active" onclick="loadPage('trang_admin.html')" title="Đề thi">
+            <i class="fas fa-folder"></i>
+        </div>
+        <div class="nav-item" onclick="loadPage('danh_sach_lop.html')" title="Lớp học">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="nav-item" onclick="loadPage('thong_ke.html')" title="Thống kê">
+            <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="nav-item" onclick="loadPage('ngan_hang.html')" title="Ngân hàng câu hỏi">
+            <i class="fas fa-database"></i>
+        </div>
+        <div class="nav-item" onclick="loadPage('lich_su.html')" title="Lịch sử">
+            <i class="fas fa-history"></i>
+        </div>
+    </nav>
+
+    <div class="nav-spacer"></div>
+
+    <div class="nav-bottom">
+        <div class="nav-item" onclick="logout()" title="Đăng xuất">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN WRAP -->
+<div class="main-wrap">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="page-title" id="pageTitle">Quản lý đề thi</div>
+        <div class="topbar-right">
+            <button class="btn-premium">
+                <i class="fas fa-gem"></i> Nâng VIP
+            </button>
+            <div class="flag-icon"></div>
+            <div class="notif-btn">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="user-chip">
+                <div class="user-avatar" id="userAvatar">GV</div>
+                <div class="user-info">
+                    <div class="name" id="userName">Giáo viên</div>
+                    <div class="role">Giáo viên</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT FRAME -->
+    <iframe class="content-frame" id="contentFrame" src="trang_admin.html"></iframe>
+
+</div>
+
+<script>
+// Get page from URL param
+const urlParams = new URLSearchParams(window.location.search);
+const initialPage = urlParams.get('page') || 'trang_admin.html';
+const ma_de = urlParams.get('ma_de');
+const ma_code = urlParams.get('ma_code');
+
+// Load page into iframe
+function loadPage(page) {
+    const frame = document.getElementById('contentFrame');
+    const pageTitle = document.getElementById('pageTitle');
+    
+    // Update page title
+    const titles = {
+        'trang_admin.html': 'Quản lý đề thi',
+        'danh_sach_lop.html': 'Lớp học',
+        'thong_ke.html': 'Thống kê',
+        'ngan_hang.html': 'Ngân hàng câu hỏi',
+        'lich_su.html': 'Lịch sử',
+        'tao_de.html': 'Tạo đề thi',
+        'danh_sach_da_thi.html': 'Danh sách bài làm',
+        'xem_chi_tiet.html': 'Chi tiết bài làm',
+        'publish.html': 'Chia sẻ đề thi'
+    };
+    
+    pageTitle.textContent = titles[page] || 'Vinhzota';
+    
+    // Load page with params if exists
+    let pageUrl = page;
+    if (ma_de && ma_code && page === 'publish.html') {
+        pageUrl = `${page}?ma_de=${ma_de}&ma_code=${ma_code}`;
+    }
+    
+    frame.src = pageUrl;
+    
+    // Update active nav
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+}
+
+// Logout
+function logout() {
+    if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+        window.location.href = 'dang_nhap.html';
+    }
+}
+
+// Check auth on load
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+        const result = await response.json();
+        
+        if (result.authenticated && result.user.phan_quyen === 'teacher') {
+            document.getElementById('userName').textContent = result.user.full_name;
+            document.getElementById('userAvatar').textContent = result.user.full_name.charAt(0).toUpperCase();
+            
+            // Load initial page
+            loadPage(initialPage);
+        } else {
+            window.location.href = 'dang_nhap.html';
+        }
+    } catch (error) {
+        console.error('Auth error:', error);
+    }
+});
+</script>
+
+</body>
+</html>
