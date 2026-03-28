@@ -595,6 +595,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         let ma_de = urlParams.get('ma_de');
         let ma_code = urlParams.get('ma_code');
+        let mode = urlParams.get('mode'); // 'create' or 'edit'
         let questions = [];
 
         // Initialize
@@ -602,8 +603,55 @@
             if (ma_code) {
                 document.getElementById('examCode').value = ma_code;
             }
+            
+            // If edit mode, load exam data
+            if (mode === 'edit' && ma_de) {
+                loadExamData();
+            }
+            
             setupUpload();
         });
+        
+        // Load exam data for edit mode
+        async function loadExamData() {
+            try {
+                // Load exam info
+                const examResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${ma_de}`);
+                const examResult = await examResponse.json();
+                
+                if (examResult.success) {
+                    const exam = examResult.data;
+                    
+                    // Fill form fields
+                    document.getElementById('examTitle').value = exam.ten_de || '';
+                    document.getElementById('examCode').value = exam.ma_code || '';
+                    
+                    if (exam.thoi_gian_nap) {
+                        document.getElementById('examDeadline').value = exam.thoi_gian_nap;
+                    }
+                    
+                    // Set radio buttons
+                    document.querySelector(`input[name="showResult"][value="${exam.cho_xem_ket_qua == 1 ? 'yes' : 'no'}"]`).checked = true;
+                    document.querySelector(`input[name="requireLogin"][value="${exam.yeu_cau_dang_nhap == 1 ? 'yes' : 'no'}"]`).checked = true;
+                    
+                    // Update title
+                    document.querySelector('.title').textContent = 'SỬA ĐỀ THI';
+                }
+                
+                // Load questions
+                const qResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_questions&ma_de=${ma_de}`);
+                const qResult = await qResponse.json();
+                
+                if (qResult.success) {
+                    questions = qResult.data || [];
+                    renderQuestions();
+                }
+                
+            } catch (error) {
+                console.error('Load exam error:', error);
+                alert('Không thể tải thông tin đề thi');
+            }
+        }
 
         // Setup upload
         function setupUpload() {
@@ -755,8 +803,29 @@
             saveBtn.textContent = 'Đang lưu...';
 
             try {
-                // Create exam if not exists
-                if (!ma_de) {
+                // Update or create exam
+                if (ma_de && mode === 'edit') {
+                    // Update existing exam
+                    const updateResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ma_de: ma_de,
+                            ten_de: title,
+                            thoi_gian_nap: deadline || null,
+                            cho_xem_ket_qua: showResult,
+                            yeu_cau_dang_nhap: requireLogin,
+                            trang_thai: 'active'
+                        })
+                    });
+
+                    const updateResult = await updateResponse.json();
+
+                    if (!updateResult.success) {
+                        throw new Error(updateResult.message);
+                    }
+                } else {
+                    // Create new exam
                     const createResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -781,7 +850,7 @@
 
                 // Save questions
                 console.log('Saving questions:', JSON.stringify(questions, null, 2));
-                
+
                 const saveResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=save_questions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -794,8 +863,13 @@
                 const saveResult = await saveResponse.json();
 
                 if (saveResult.success) {
-                    // Redirect to publish page
-                    window.location.href = `publish.html?ma_de=${ma_de}&ma_code=${ma_code}`;
+                    if (mode === 'edit') {
+                        alert('Cập nhật đề thi thành công!');
+                        window.location.href = 'trang_admin.html';
+                    } else {
+                        // Redirect to publish page for new exam
+                        window.location.href = `publish.html?ma_de=${ma_de}&ma_code=${ma_code}`;
+                    }
                 } else {
                     throw new Error(saveResult.message);
                 }

@@ -61,14 +61,28 @@ function handleLogin($user) {
     
     // Get user
     $user_data = $user->getByUsernameOrEmail($username);
-    
+
     if (!$user_data) {
         echo json_encode(['success' => false, 'message' => 'Tên đăng nhập hoặc email không tồn tại']);
         return;
     }
+
+    // Debug: Log password verification
+    error_log('Login attempt - Username: ' . $username);
+    error_log('Password length: ' . strlen($password));
+    error_log('Password bytes: ' . bin2hex($password));
+    error_log('Hash from DB: ' . $user_data['password']);
+    error_log('Hash length: ' . strlen($user_data['password']));
     
-    // Verify password
-    if (!$user->verifyPassword($password, $user_data['password'])) {
+    $verify_result = $user->verifyPassword($password, $user_data['password']);
+    error_log('Verify result: ' . ($verify_result ? 'true' : 'false'));
+    
+    if (!$verify_result) {
+        // Test: Try to rehash and verify
+        $new_hash = password_hash($password, PASSWORD_DEFAULT);
+        $test_verify = password_verify($password, $new_hash);
+        error_log('Test verify with new hash: ' . ($test_verify ? 'true' : 'false'));
+        
         echo json_encode(['success' => false, 'message' => 'Mật khẩu không chính xác']);
         return;
     }
@@ -111,9 +125,12 @@ function handleRegister($user) {
         echo json_encode(['success' => false, 'message' => 'Method not allowed']);
         return;
     }
-    
+
     $data = json_decode(file_get_contents('php://input'), true);
-    
+
+    // Debug: log received data
+    error_log('Register data: ' . print_r($data, true));
+
     $ten_user = isset($data['ten_user']) ? trim($data['ten_user']) : '';
     $password = isset($data['password']) ? $data['password'] : '';
     $full_name = isset($data['full_name']) ? trim($data['full_name']) : '';
@@ -121,28 +138,28 @@ function handleRegister($user) {
     $phone = isset($data['phone']) ? trim($data['phone']) : '';
     $school = isset($data['school']) ? trim($data['school']) : '';
     $phan_quyen = isset($data['phan_quyen']) ? $data['phan_quyen'] : 'student';
-    
+
     // Validation
     if (empty($ten_user) || empty($password) || empty($full_name)) {
         echo json_encode(['success' => false, 'message' => 'Vui lòng nhập đầy đủ thông tin bắt buộc']);
         return;
     }
-    
+
     if (strlen($password) < 6) {
         echo json_encode(['success' => false, 'message' => 'Mật khẩu phải có ít nhất 6 ký tự']);
         return;
     }
-    
+
     if (!empty($email) && $user->emailExists($email)) {
         echo json_encode(['success' => false, 'message' => 'Email đã tồn tại']);
         return;
     }
-    
+
     if (!empty($phone) && $user->phoneExists($phone)) {
         echo json_encode(['success' => false, 'message' => 'Số điện thoại đã tồn tại']);
         return;
     }
-    
+
     // Create user
     $user_data = [
         'ten_user' => $ten_user,
@@ -153,17 +170,23 @@ function handleRegister($user) {
         'school' => $school,
         'phan_quyen' => $phan_quyen
     ];
-    
-    $ma_user = $user->create($user_data);
-    
-    if ($ma_user) {
-        echo json_encode([
-            'success' => true,
-            'message' => 'Đăng ký thành công',
-            'redirect' => '/vinhzota/views/dang_nhap.html'
-        ]);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Đăng ký thất bại, vui lòng thử lại']);
+
+    try {
+        $ma_user = $user->create($user_data);
+
+        if ($ma_user) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Đăng ký thành công',
+                'redirect' => '/vinhzota/views/dang_nhap.html'
+            ]);
+        } else {
+            error_log('Register failed: create returned false');
+            echo json_encode(['success' => false, 'message' => 'Đăng ký thất bại, vui lòng thử lại']);
+        }
+    } catch (Exception $e) {
+        error_log('Register exception: ' . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()]);
     }
 }
 

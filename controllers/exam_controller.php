@@ -37,35 +37,39 @@ switch ($action) {
     case 'create':
         createExam();
         break;
-    
+
     case 'get_by_teacher':
         getExamsByTeacher();
         break;
-    
+
     case 'get_by_code':
         getExamByCode();
         break;
-    
+
     case 'get_by_id':
         getExamById();
         break;
-    
+
+    case 'get_questions':
+        getQuestionsByExam();
+        break;
+
     case 'update':
         updateExam();
         break;
-    
+
     case 'delete':
         deleteExam();
         break;
-    
+
     case 'parse_file':
         parseExamFile();
         break;
-    
+
     case 'save_questions':
         saveQuestions();
         break;
-    
+
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
 }
@@ -162,16 +166,16 @@ function getExamByCode() {
  */
 function getExamById() {
     global $exam;
-    
+
     $ma_de = isset($_GET['ma_de']) ? trim($_GET['ma_de']) : '';
-    
+
     if (empty($ma_de)) {
         echo json_encode(['success' => false, 'message' => 'Invalid ID']);
         return;
     }
-    
+
     $exam_data = $exam->getById($ma_de);
-    
+
     if ($exam_data) {
         echo json_encode([
             'success' => true,
@@ -180,6 +184,32 @@ function getExamById() {
     } else {
         echo json_encode(['success' => false, 'message' => 'Không tìm thấy đề thi']);
     }
+}
+
+/**
+ * Get questions by exam ID
+ */
+function getQuestionsByExam() {
+    global $question, $answer;
+
+    $ma_de = isset($_GET['ma_de']) ? trim($_GET['ma_de']) : '';
+
+    if (empty($ma_de)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid exam ID']);
+        return;
+    }
+
+    $questions = $question->getByExam($ma_de);
+    
+    // Get answers for each question
+    foreach ($questions as &$q) {
+        $q['dap_an'] = $answer->getByQuestion($q['ma_cau_hoi']);
+    }
+
+    echo json_encode([
+        'success' => true,
+        'data' => $questions
+    ]);
 }
 
 /**

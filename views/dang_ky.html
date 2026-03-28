@@ -394,7 +394,7 @@
             registerBtn.textContent = 'Đang tạo tài khoản...';
 
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=register', {
+                const response = await fetch('../controllers/auth_controller.php?action=register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
