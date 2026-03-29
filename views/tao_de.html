@@ -80,6 +80,17 @@
             padding-right: 15px;
         }
 
+        /* Questions section header - fixed */
+        .questions-section-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 15px;
+        }
+
         .right-column {
             max-height: calc(100vh - 150px);
             overflow-y: auto;
@@ -471,9 +482,14 @@
                 <!-- Left Column - Questions List -->
                 <div class="left-column">
                     <div class="questions-section">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h3 style="font-size: 16px;">Danh sách câu hỏi</h3>
-                            <span id="questionCount" style="color: #667eea; font-weight: 600;">0 câu hỏi</span>
+                        <div class="questions-section-header">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 style="font-size: 16px;">Danh sách câu hỏi</h3>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <span id="questionCount" style="color: #667eea; font-weight: 600;">0 câu hỏi</span>
+                                    <button id="clearAllBtn" onclick="clearAllQuestions()" style="display: none; background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;">🗑️ Xóa tất cả</button>
+                                </div>
+                            </div>
                         </div>
 
                         <div id="questionsList">
@@ -508,8 +524,11 @@
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">📄</div>
                         <div class="upload-text">Kéo thả file vào đây hoặc click để chọn</div>
-                        <div class="upload-hint">Hỗ trợ file .txt là chủ yếu, .doc, .docx - đang phát triển</div>
-                        <div class="upload-hint" style="margin-top: 8px; font-size: 12px; color: #666;">
+                        <div class="upload-hint">Hỗ trợ file .txt, .doc, .docx bôi vàng đáp án</div>
+                        <div class="upload-hint" style="margin-top: 8px; font-size: 12px; color: #22c55e; font-weight: 500;">
+                            ✅ Có thể upload nhiều file - Câu hỏi sẽ được thêm vào danh sách
+                        </div>
+                        <div class="upload-hint" style="margin-top: 4px; font-size: 12px; color: #666;">
                             Format: 1.Câu hỏi? <br> A. Nội dung A <br> B. Nội dung B <br> C. Nội dung C <br> D. Nội dung D
                         </div>
                         <input type="file" id="fileInput" accept=".txt,.csv,.doc,.docx" style="display: none;">
@@ -660,9 +679,22 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    questions = result.data;
+                    const newQuestions = result.data || [];
+                    
+                    // Thêm câu hỏi mới vào danh sách hiện tại
+                    if (questions.length === 0) {
+                        // Nếu chưa có câu hỏi nào, gán luôn
+                        questions = newQuestions;
+                    } else {
+                        // Nếu đã có câu hỏi, thêm mới vào và đánh số lại thứ tự
+                        newQuestions.forEach((q, index) => {
+                            q.thu_tu = questions.length + index + 1;
+                            questions.push(q);
+                        });
+                    }
+                    
                     renderQuestions();
-                    alert(`Đã tải ${questions.length} câu hỏi từ file`);
+                    alert(`Đã thêm ${newQuestions.length} câu hỏi. Tổng cộng: ${questions.length} câu hỏi`);
                 } else {
                     alert('Lỗi: ' + result.message);
                 }
@@ -676,8 +708,12 @@
         function renderQuestions() {
             const container = document.getElementById('questionsList');
             const countLabel = document.getElementById('questionCount');
+            const clearAllBtn = document.getElementById('clearAllBtn');
 
             countLabel.textContent = `${questions.length} câu hỏi`;
+            
+            // Hiển thị nút xóa tất cả khi có câu hỏi
+            clearAllBtn.style.display = questions.length > 0 ? 'block' : 'none';
 
             if (questions.length === 0) {
                 container.innerHTML = `
@@ -737,6 +773,14 @@
         function deleteQuestion(index) {
             if (confirm('Xóa câu hỏi này?')) {
                 questions.splice(index, 1);
+                renderQuestions();
+            }
+        }
+
+        // Clear all questions
+        function clearAllQuestions() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả câu hỏi? Bạn có thể upload file mới sau khi xóa.')) {
+                questions = [];
                 renderQuestions();
             }
         }
