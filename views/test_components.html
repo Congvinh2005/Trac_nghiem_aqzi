@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Components</title>
+    <link rel="stylesheet" href="../assets/components/sidebar.css">
+    <link rel="stylesheet" href="../assets/components/header.css">
+    <link rel="stylesheet" href="../assets/components/footer.css">
+</head>
+<body>
+    <h2>Test Components Loading</h2>
+    
+    <div id="sidebar-container"></div>
+    <script src="../assets/js/app-config.js"></script>
+    <script src="../assets/components/sidebar.js"></script>
+    <script>
+        console.log('=== Component Test ===');
+        console.log('BASE_PATH:', BASE_PATH);
+        console.log('API:', API);
+        console.log('loadSidebar function:', typeof loadSidebar);
+        
+        setTimeout(() => {
+            const sidebar = document.getElementById('sidebar-container');
+            if (sidebar && sidebar.innerHTML.trim()) {
+                console.log('✅ Sidebar loaded!');
+                document.body.innerHTML += '<p style="color: green; font-size: 20px;">✅ Sidebar LOADED!</p>';
+            } else {
+                console.log('❌ Sidebar NOT loaded!');
+                document.body.innerHTML += '<p style="color: red; font-size: 20px;">❌ Sidebar NOT loaded!</p>';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

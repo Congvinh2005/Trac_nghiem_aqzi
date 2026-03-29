@@ -3,23 +3,23 @@
  * Usage: Include this script and call loadSidebar() with the active nav item index
  */
 
-// Tự động phát hiện base path
-function getBasePath() {
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    
-    // Tìm 'vinhzota' trong path
-    const vinhzotaIndex = parts.indexOf('vinhzota');
-    if (vinhzotaIndex !== -1) {
-        // Lấy tất cả phần từ đầu đến 'vinhzota'
-        return parts.slice(0, vinhzotaIndex + 1).join('/');
-    }
-    
-    // Nếu không tìm thấy, trả về rỗng (root)
-    return '';
-}
+// Sử dụng BASE_PATH từ app-config.js nếu đã tồn tại
+if (typeof BASE_PATH === 'undefined') {
+    // Tự động phát hiện base path (fallback)
+    function getBasePath() {
+        const path = window.location.pathname;
+        const parts = path.split('/');
 
-const BASE_PATH = getBasePath();
+        const vinhzotaIndex = parts.indexOf('vinhzota');
+        if (vinhzotaIndex !== -1) {
+            return parts.slice(0, vinhzotaIndex + 1).join('/');
+        }
+
+        return '';
+    }
+
+    const BASE_PATH = getBasePath();
+}
 
 // Load sidebar HTML component
 async function loadSidebar(activeIndex = -1) {
