@@ -2,6 +2,21 @@
  * Header Component Loader
  */
 
+// Tự động phát hiện base path
+function getBasePath() {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    
+    const vinhzotaIndex = parts.indexOf('vinhzota');
+    if (vinhzotaIndex !== -1) {
+        return parts.slice(0, vinhzotaIndex + 1).join('/');
+    }
+    
+    return '';
+}
+
+const BASE_PATH = getBasePath();
+
 // Load header HTML component
 async function loadHeader(options = {}) {
     const {
@@ -14,7 +29,7 @@ async function loadHeader(options = {}) {
     } = options;
 
     try {
-        const response = await fetch('/vinhzota/assets/components/header.html?v=' + Date.now());
+        const response = await fetch(BASE_PATH + '/assets/components/header.html?v=' + Date.now());
         let headerHTML = await response.text();
 
         const headerContainer = document.getElementById('header-container');

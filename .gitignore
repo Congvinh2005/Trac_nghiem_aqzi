@@ -1,0 +1,41 @@
+# Vinhzota - Files to ignore
+
+# IDE và Editor
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Qwen Code (AI assistant)
+.qwen/
+
+# Logs
+*.log
+error_log
+npm-debug.log*
+
+# Environment config (local)
+config/database_config.php
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.cache
+
+# Uploads (nếu có)
+uploads/*
+!uploads/.gitkeep
+
+# Node modules (nếu dùng npm)
+node_modules/
+package-lock.json
+
+# Composer
+vendor/
+composer.lock

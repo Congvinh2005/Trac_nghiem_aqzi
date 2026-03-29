@@ -2,10 +2,25 @@
  * Footer Component Loader
  */
 
+// Tự động phát hiện base path
+function getBasePath() {
+    const path = window.location.pathname;
+    const parts = path.split('/');
+    
+    const vinhzotaIndex = parts.indexOf('vinhzota');
+    if (vinhzotaIndex !== -1) {
+        return parts.slice(0, vinhzotaIndex + 1).join('/');
+    }
+    
+    return '';
+}
+
+const BASE_PATH = getBasePath();
+
 // Load footer HTML component
 async function loadFooter() {
     try {
-        const response = await fetch('/vinhzota/assets/components/footer.html');
+        const response = await fetch(BASE_PATH + '/assets/components/footer.html');
         const footerHTML = await response.text();
         
         const footerContainer = document.getElementById('footer-container');
