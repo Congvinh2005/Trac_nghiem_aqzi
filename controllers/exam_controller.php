@@ -299,35 +299,32 @@ function parseExamFile() {
         return;
     }
 
-    $content = '';
-    
-    // Read file content based on extension
-    if ($file_extension === 'txt' || $file_extension === 'csv') {
-        $content = file_get_contents($file['tmp_name']);
-        // Convert to UTF-8 if needed
-        if (!mb_detect_encoding($content, 'UTF-8', true)) {
-            $content = mb_convert_encoding($content, 'UTF-8', 'auto');
+    $questions = [];
+
+    if ($file_extension === 'docx') {
+        // .docx: parse XML trực tiếp, detect highlight vàng = đáp án đúng
+        $questions = parseDocxWithHighlight($file['tmp_name']);
+    } else {
+        // txt / csv / doc: dùng plain text + parseContent
+        $content = '';
+        if ($file_extension === 'txt' || $file_extension === 'csv') {
+            $content = file_get_contents($file['tmp_name']);
+            if (!mb_detect_encoding($content, 'UTF-8', true)) {
+                $content = mb_convert_encoding($content, 'UTF-8', 'auto');
+            }
+        } else {
+            // .doc binary
+            $content = file_get_contents($file['tmp_name']);
+            $content = preg_replace('/[^\x20-\x7E\x{0080}-\x{FFFF}\r\n\t]/u', ' ', $content);
         }
-    } elseif ($file_extension === 'doc' || $file_extension === 'docx') {
-        // For .doc/.docx, try to extract text
-        $content = extractTextFromDoc($file['tmp_name'], $file_extension);
+        $questions = parseContent($content);
     }
-
-    // Debug: log content
-    file_put_contents('/tmp/debug_content.txt', substr($content, 0, 500));
-
-    // Parse content
-    $questions = parseContent($content);
 
     if (empty($questions)) {
         echo json_encode([
-            'success' => false, 
-            'message' => 'Không tìm thấy câu hỏi nào. Định dạng: 1.Câu hỏi? A. Đáp án A B. Đáp án B...',
-            'debug' => [
-                'extension' => $file_extension,
-                'content_length' => strlen($content),
-                'first_200_chars' => substr($content, 0, 200)
-            ]
+            'success' => false,
+            'message' => 'Không tìm thấy câu hỏi nào. Kiểm tra định dạng file.',
+            'debug' => ['extension' => $file_extension]
         ]);
         return;
     }
@@ -340,58 +337,139 @@ function parseExamFile() {
 }
 
 /**
- * Extract text from .doc or .docx file
+ * Parse .docx file trực tiếp từ XML.
+ * Detect đáp án highlight màu vàng (w:highlight val="yellow" hoặc shd fill vàng)
+ * và tự động đánh dấu la_dung = 1.
  */
-function extractTextFromDoc($filePath, $extension) {
-    $content = '';
-    
-    if ($extension === 'docx') {
-        // .docx is a ZIP archive containing XML files
-        $zip = new ZipArchive();
-        if ($zip->open($filePath) === TRUE) {
-            // Try to extract from word/document.xml
-            $xmlContent = $zip->getFromName('word/document.xml');
-            
-            if ($xmlContent) {
-                // Parse paragraph-by-paragraph to avoid text fragmentation.
-                // In OOXML, a single line like "A. Phần cứng và phần mềm."
-                // is split across many <w:r><w:t> run elements. Stripping all
-                // XML tags naively breaks these into separate lines that don't
-                // match the answer regex. Instead, we join all <w:t> within 
-                // each <w:p> paragraph first, then split by paragraph.
-                preg_match_all('/<w:p[ >].*?<\/w:p>/s', $xmlContent, $paraMatches);
-                $lines = [];
-                foreach ($paraMatches[0] as $paraXml) {
-                    preg_match_all('/<w:t[^>]*>([^<]*)<\/w:t>/s', $paraXml, $textMatches);
-                    $paraText = trim(implode('', $textMatches[1]));
-                    if (!empty($paraText)) {
-                        $lines[] = $paraText;
-                    }
-                }
-                $content = implode("\n", $lines);
-                // Decode XML entities
-                $content = html_entity_decode($content, ENT_QUOTES | ENT_XML1, 'UTF-8');
-            }
-            
-            $zip->close();
-        }
-        
-        // If still empty, try alternative method
-        if (empty(trim($content))) {
-            $content = file_get_contents($filePath);
-            // Try to extract readable text
-            $content = preg_replace('/[^\x20-\x7E\x{0080}-\x{FFFF}\r\n]/u', "\n", $content);
-            $content = preg_replace('/\n\s*\n/', "\n", $content);
-        }
-    } else {
-        // .doc is binary - basic extraction (limited support)
-        $content = file_get_contents($filePath);
-        // Remove binary characters, keep text
-        $content = preg_replace('/[^\x20-\x7E\x{0080}-\x{FFFF}\r\n\t]/u', ' ', $content);
-        $content = preg_replace('/\s+/', ' ', $content);
+function parseDocxWithHighlight($filePath) {
+    $zip = new ZipArchive();
+    if ($zip->open($filePath) !== TRUE) {
+        return [];
     }
-    
-    return $content;
+
+    $xmlContent = $zip->getFromName('word/document.xml');
+    $zip->close();
+
+    if (!$xmlContent) return [];
+
+    // Decode XML entities
+    $xmlContent = html_entity_decode($xmlContent, ENT_QUOTES | ENT_XML1, 'UTF-8');
+
+    // Tách từng paragraph <w:p>
+    preg_match_all('/<w:p[ >].*?<\/w:p>/s', $xmlContent, $paraMatches);
+
+    $chapter_pattern  = '/^\s*(Chương|Chapter|Bài|Part|Phần)\s*\d+/iu';
+    $question_pattern = '/^\s*(\d+)\s*[.\/):-]\s*(.+)/u';
+    $answer_pattern   = '/^\s*([A-Da-d])\s*[.\/):-]\s*(.+)/u';
+    $yellow_fills     = ['FFFF00', 'ffff00', 'yellow', 'FFFF', 'ffff'];
+
+    // Build danh sách paragraphs kèm flag is_highlighted
+    $paragraphs = [];
+    foreach ($paraMatches[0] as $paraXml) {
+        // Lấy text
+        preg_match_all('/<w:t[^>]*>([^<]*)<\/w:t>/s', $paraXml, $textMatches);
+        $paraText = trim(implode('', $textMatches[1]));
+        if (empty($paraText)) continue;
+
+        // Kiểm tra highlight vàng:
+        // Cách 1: <w:highlight w:val="yellow"/>
+        $isYellow = preg_match('/<w:highlight[^>]+w:val="yellow"/', $paraXml);
+        // Cách 2: <w:shd w:fill="FFFF00">
+        if (!$isYellow) {
+            foreach ($yellow_fills as $fill) {
+                if (preg_match('/<w:shd[^>]+w:fill="' . preg_quote($fill, '/') . '"/', $paraXml)) {
+                    $isYellow = true;
+                    break;
+                }
+            }
+        }
+
+        $paragraphs[] = ['text' => $paraText, 'yellow' => (bool)$isYellow];
+    }
+
+    // Parse theo kiểu sliding window
+    $questions = [];
+    $q_counter = 0;
+    $i = 0;
+    $n = count($paragraphs);
+    $letters = ['A', 'B', 'C', 'D'];
+
+    while ($i < $n) {
+        $para = $paragraphs[$i];
+        $line = $para['text'];
+
+        // Bỏ qua tiêu đề chương
+        if (preg_match($chapter_pattern, $line)) { $i++; continue; }
+
+        // Detect câu hỏi
+        $q_text = null;
+        if (preg_match($question_pattern, $line, $m)) {
+            $q_text = trim($m[2]);
+            $i++;
+        } elseif (preg_match('/\?\s*$/u', $line) && !preg_match($answer_pattern, $line)) {
+            $q_text = $line;
+            $i++;
+        } else {
+            $i++;
+            continue;
+        }
+
+        // Thu thập đến 4 đáp án
+        $answers_raw = [];
+        while ($i < $n && count($answers_raw) < 4) {
+            $al = $paragraphs[$i];
+            $al_text = $al['text'];
+
+            if (preg_match($chapter_pattern, $al_text)) break;
+            if (preg_match($question_pattern, $al_text) && count($answers_raw) > 0) break;
+            if (preg_match('/\?\s*$/u', $al_text) && !preg_match($answer_pattern, $al_text) && count($answers_raw) > 0) break;
+
+            $ans_text = $al_text;
+            if (preg_match($answer_pattern, $al_text, $am)) {
+                $ans_text = trim($am[2]);
+            }
+
+            $answers_raw[] = [
+                'text'   => $ans_text,
+                'yellow' => $al['yellow']
+            ];
+            $i++;
+        }
+
+        if (count($answers_raw) < 2) continue;
+
+        // Pad đến 4 đáp án nếu thiếu
+        while (count($answers_raw) < 4) {
+            $answers_raw[] = ['text' => 'Chưa có nội dung', 'yellow' => false];
+        }
+
+        // Kiểm tra có đáp án vàng không
+        $has_yellow = false;
+        foreach ($answers_raw as $a) {
+            if ($a['yellow']) { $has_yellow = true; break; }
+        }
+
+        $q_counter++;
+        $dap_an = [];
+        foreach ($answers_raw as $idx => $a) {
+            // Nếu file có highlight vàng: dùng vàng để xác định đúng
+            // Nếu không có highlight nào: la_dung = 0 (giáo viên chọn thủ công)
+            $la_dung = $has_yellow ? ($a['yellow'] ? 1 : 0) : 0;
+            $dap_an[] = [
+                'ky_tu'   => $letters[$idx],
+                'noi_dung'=> $a['text'],
+                'la_dung' => $la_dung
+            ];
+        }
+
+        $questions[] = [
+            'thu_tu'  => $q_counter,
+            'noi_dung'=> $q_text,
+            'dap_an'  => $dap_an
+        ];
+    }
+
+    return $questions;
 }
 
 /**
