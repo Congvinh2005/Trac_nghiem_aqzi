@@ -31,7 +31,7 @@ class Database {
             }
         } 
         // Tự động phát hiện môi trường nếu không có config file
-        else if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || 
+        else if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false ||
             strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false ||
             strpos($_SERVER['HTTP_HOST'], '192.168.') !== false) {
             // Local environment
@@ -40,11 +40,11 @@ class Database {
             $this->username = "root";
             $this->password = "";
         } else {
-            // Hosting environment - defaults
+            // Hosting environment - udtbalbihosting
             $this->host = "localhost";
-            $this->db_name = "vinhzota";
-            $this->username = "root";
-            $this->password = "";
+            $this->db_name = "udtbalbihosting_vinhzota";
+            $this->username = "udtbalbihosting_vinhzota";
+            $this->password = "Vinh@1234";
         }
     }
 
