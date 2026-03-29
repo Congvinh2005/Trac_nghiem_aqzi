@@ -5,6 +5,11 @@
  * Tự động phát hiện môi trường local hay hosting
  */
 
+// Kiểm tra file cấu hình riêng (cho hosting)
+if (file_exists(__DIR__ . '/database_config.php')) {
+    require_once __DIR__ . '/database_config.php';
+}
+
 class Database {
     private $host;
     private $db_name;
@@ -15,8 +20,18 @@ class Database {
     public $conn;
 
     public function __construct() {
-        // Tự động phát hiện môi trường
-        if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || 
+        // Ưu tiên dùng config từ database_config.php nếu tồn tại
+        if (defined('DB_HOST')) {
+            $this->host = DB_HOST;
+            $this->db_name = DB_NAME;
+            $this->username = DB_USER;
+            $this->password = DB_PASS;
+            if (defined('DB_CHARSET')) {
+                $this->charset = DB_CHARSET;
+            }
+        } 
+        // Tự động phát hiện môi trường nếu không có config file
+        else if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || 
             strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false ||
             strpos($_SERVER['HTTP_HOST'], '192.168.') !== false) {
             // Local environment
@@ -25,11 +40,11 @@ class Database {
             $this->username = "root";
             $this->password = "";
         } else {
-            // Hosting environment - có thể override bằng define
-            $this->host = defined('DB_HOST') ? DB_HOST : "localhost";
-            $this->db_name = defined('DB_NAME') ? DB_NAME : "vinhzota";
-            $this->username = defined('DB_USER') ? DB_USER : "root";
-            $this->password = defined('DB_PASS') ? DB_PASS : "";
+            // Hosting environment - defaults
+            $this->host = "localhost";
+            $this->db_name = "vinhzota";
+            $this->username = "root";
+            $this->password = "";
         }
     }
 
