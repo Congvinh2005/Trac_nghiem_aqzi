@@ -1,0 +1,43 @@
+<!-- Admin Header Component -->
+<div class="header">
+    <div class="header-left">
+        <button class="back-btn" onclick="goBack()">
+            <span>←</span>
+            <span>Quay lại</span>
+        </button>
+    </div>
+    
+    <div class="header-center">
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="headerSearchInput" placeholder="Tìm kiếm...">
+        </div>
+    </div>
+    
+    <div class="header-right">
+        <button class="icon-btn sort-btn" title="Sắp xếp">🔀</button>
+        <button class="icon-btn filter-btn" title="Bộ lọc">⚙️</button>
+        <button class="icon-btn menu-btn" title="Menu">☰</button>
+        <div class="profile" onclick="toggleProfileMenu()">
+            <div class="avatar" id="headerAvatar">GV</div>
+            <div class="user-name" id="headerUserName">Giáo viên</div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Dropdown -->
+<div class="profile-dropdown" id="profileDropdown">
+    <div class="profile-dropdown-item" onclick="viewProfile()">
+        <span>👤</span>
+        <span>Hồ sơ</span>
+    </div>
+    <div class="profile-dropdown-item" onclick="openSettings()">
+        <span>⚙️</span>
+        <span>Cài đặt</span>
+    </div>
+    <div class="profile-dropdown-divider"></div>
+    <div class="profile-dropdown-item" onclick="logout()">
+        <span>🚪</span>
+        <span>Đăng xuất</span>
+    </div>
+</div>

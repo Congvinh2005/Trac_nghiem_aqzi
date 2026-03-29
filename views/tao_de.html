@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo đề thi - Vinhzota</title>
+    <link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css">
+    <link rel="stylesheet" href="/vinhzota/assets/components/header.css">
+    <link rel="stylesheet" href="/vinhzota/assets/components/footer.css">
     <style>
         * {
             margin: 0;
@@ -14,90 +17,16 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background: #f5f7fb;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 80px;
-            height: 100vh;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            position: fixed;
-            left: 0;
-            top: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 20px 0;
-            gap: 20px;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #667eea;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .nav-item {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .nav-item.active {
-            background: white;
-            color: #667eea;
-        }
-
-        /* Header */
-        .header {
-            height: 60px;
-            background: white;
-            margin-left: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 0 20px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-        }
-
-        .header button {
-            margin-left: 10px;
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-blue {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-purple {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
+            min-height: 100vh;
         }
 
         /* Main */
         .main {
-            margin-left: 80px;
+            margin-left: 90px;
             padding: 20px 40px;
+            flex: 1;
         }
 
         /* Card */
@@ -114,6 +43,26 @@
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 25px;
+            color: #333;
+        }
+
+        /* Header buttons */
+        .header button {
+            margin-left: 10px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             color: #333;
         }
 
@@ -492,15 +441,25 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo" onclick="window.location.href='trang_admin.html'">V</div>
-        <div class="nav-item active">📝</div>
-    </div>
+    <div id="sidebar-container"></div>
+    <script src="/vinhzota/assets/components/sidebar.js"></script>
+    <script>
+        // Load sidebar with active index 1 (Đề thi)
+        loadSidebar(1);
+    </script>
 
     <!-- Header -->
-    <div class="header">
-        <button class="btn-blue" onclick="window.location.href='trang_admin.html'">← Quay lại</button>
-    </div>
+    <div id="header-container"></div>
+    <script src="/vinhzota/assets/components/header.js"></script>
+    <script>
+        loadHeader({
+            showBack: true,
+            showSearch: false,
+            showFilter: false,
+            userName: 'Giáo viên',
+            userAvatar: 'GV'
+        });
+    </script>
 
     <!-- Main -->
     <div class="main">
@@ -548,7 +507,7 @@
                     <div class="upload-area" id="uploadArea">
                         <div class="upload-icon">📄</div>
                         <div class="upload-text">Kéo thả file vào đây hoặc click để chọn</div>
-                        <div class="upload-hint">Hỗ trợ file .txt, .doc, .docx</div>
+                        <div class="upload-hint">Hỗ trợ file .txt là chủ yếu, .doc, .docx - đang phát triển</div>
                         <div class="upload-hint" style="margin-top: 8px; font-size: 12px; color: #666;">
                             Format: 1.Câu hỏi? <br> A. Nội dung A <br> B. Nội dung B <br> C. Nội dung C <br> D. Nội dung D
                         </div>
@@ -881,5 +840,9 @@
             }
         }
     </script>
+    
+    <!-- Footer -->
+    <div id="footer-container"></div>
+    <script src="/vinhzota/assets/components/footer.js"></script>
 </body>
 </html>

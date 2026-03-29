@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lớp học - Azota</title>
+    <link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css">
+    <link rel="stylesheet" href="/vinhzota/assets/components/header.css">
+    <link rel="stylesheet" href="/vinhzota/assets/components/footer.css">
     <style>
         * {
             margin: 0;
@@ -15,90 +18,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
             background: #f0f2f5;
             display: flex;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 90px;
-            background: linear-gradient(180deg, #1e3c72 0%, #2a5298 100%);
-            padding: 20px 0;
-            display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .logo-sidebar {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #1e3c72;
-            font-size: 24px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .logo-sidebar:hover {
-            transform: scale(1.05);
-        }
-
-        .nav-item {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .nav-item.active {
-            background: white;
-            color: #1e3c72;
-        }
-
-        .nav-spacer {
-            flex: 1;
-        }
-
-        .settings-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-        }
-
-        .settings-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            min-height: 100vh;
         }
 
         /* Main Content */
@@ -109,88 +30,7 @@
             flex-direction: column;
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: #333;
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: color 0.3s;
-        }
-
-        .back-btn:hover {
-            color: #1e3c72;
-        }
-
-        .header-center {
-            flex: 1;
-            display: flex;
-            gap: 15px;
-            margin-left: 20px;
-        }
-
-        .search-box {
-            flex: 1;
-            max-width: 400px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 8px 12px 8px 35px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 13px;
-            background: #f5f5f5;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #1e3c72;
-            background: white;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 14px;
-            color: #999;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .sort-btn, .filter-btn, .menu-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            color: #666;
-            transition: color 0.3s;
-        }
-
-        .sort-btn:hover, .filter-btn:hover, .menu-btn:hover {
-            color: #1e3c72;
-        }
-
+        /* Custom styles for this page */
         .scan-btn {
             background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
             color: white;
@@ -209,26 +49,6 @@
         .scan-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
         }
 
         .user-name {
@@ -578,46 +398,39 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo-sidebar">Δ</div>
-        <div class="nav-item">🏠</div>
-        <div class="nav-item">📚</div>
-        <div class="nav-item active">👥</div>
-        <div class="nav-item">📊</div>
-        <div class="nav-item">📚</div>
-        <div class="nav-item">🏛️</div>
-        <div class="nav-item">📖</div>
-        <div class="nav-spacer"></div>
-        <button class="settings-btn">⚙️</button>
-    </div>
+    <div id="sidebar-container"></div>
+    <script src="/vinhzota/assets/components/sidebar.js"></script>
+    <script>
+        // Load sidebar with active index 2 (Lớp học)
+        loadSidebar(2);
+    </script>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Header -->
-        <div class="header">
-            <button class="back-btn">← Quay lại</button>
-
-            <div class="header-center">
-                <div class="search-box">
-                    <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="Tìm kiếm">
-                </div>
-            </div>
-
-            <div class="header-right">
-                <button class="sort-btn" title="Sắp xếp">🔀</button>
-                <button class="filter-btn" title="Bộ lọc">⚙️</button>
-                <button class="menu-btn" title="Menu">☰</button>
-                <button class="scan-btn" onclick="scanQR()">
-                    <span>🔴</span>
-                    <span>Chiếm File Scan</span>
-                </button>
-                <div class="profile">
-                    <div class="avatar">CV</div>
-                    <div class="user-name">Công Vinh</div>
-                </div>
-            </div>
-        </div>
+        <div id="header-container"></div>
+        <script src="/vinhzota/assets/components/header.js"></script>
+        <script>
+            loadHeader({
+                showBack: true,
+                showSearch: true,
+                showFilter: true,
+                userName: 'Công Vinh',
+                userAvatar: 'CV'
+            });
+            
+            // Add scan button after header loads
+            setTimeout(function() {
+                const headerRight = document.querySelector('.header-right');
+                if (headerRight) {
+                    const scanBtn = document.createElement('button');
+                    scanBtn.className = 'scan-btn';
+                    scanBtn.onclick = scanQR;
+                    scanBtn.innerHTML = '<span>🔴</span><span>Chiếm File Scan</span>';
+                    headerRight.insertBefore(scanBtn, headerRight.querySelector('.profile'));
+                }
+            }, 100);
+        </script>
 
         <!-- Container -->
         <div class="container">
@@ -1174,5 +987,9 @@
             }
         });
     </script>
+    
+    <!-- Footer -->
+    <div id="footer-container"></div>
+    <script src="/vinhzota/assets/components/footer.js"></script>
 </body>
 </html>

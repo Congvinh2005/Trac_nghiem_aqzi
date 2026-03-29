@@ -6,12 +6,13 @@
 <title>Chi tiết bài thi - Vinhzota</title>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css"/>
+<link rel="stylesheet" href="/vinhzota/assets/components/header.css"/>
+<link rel="stylesheet" href="/vinhzota/assets/components/footer.css"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --sidebar-bg: #1a3a6b;
-    --sidebar-w: 60px;
     --topbar-h: 60px;
     --primary: #1e5abf;
     --primary-light: #3b82f6;
@@ -33,54 +34,16 @@
     background: var(--bg);
     color: var(--text-main);
     display: flex;
+    flex-direction: column;
     min-height: 100vh;
   }
-
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: var(--sidebar-w);
-    background: var(--sidebar-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 14px 0;
-    gap: 6px;
-    position: fixed;
-    top: 0; left: 0;
-    height: 100vh;
-    z-index: 100;
-  }
-
-  .sidebar .logo {
-    width: 36px; height: 36px;
-    margin-bottom: 18px;
-  }
-
-  .sidebar-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: rgba(255,255,255,0.55);
-    font-size: 18px;
-    cursor: pointer;
-    transition: background .15s, color .15s;
-  }
-  .sidebar-icon:hover, .sidebar-icon.active {
-    background: rgba(255,255,255,0.13);
-    color: #fff;
-  }
-  .sidebar-icon.active { background: rgba(255,255,255,0.18); color: #fff; }
-
-  .sidebar-bottom { margin-top: auto; }
-  .sidebar-icon.gear { color: rgba(255,255,255,0.4); }
 
   /* ── MAIN ── */
   .main-wrap {
-    margin-left: var(--sidebar-w);
+    margin-left: 90px;
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-height: 100vh;
   }
 
   /* ── TOPBAR ── */
@@ -491,51 +454,28 @@
 <body>
 
 <!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="logo">
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="36" height="36" rx="10" fill="white" fill-opacity="0.15"/>
-      <path d="M8 18 L18 8 L28 18 L18 28 Z" stroke="white" stroke-width="2.2" fill="none"/>
-      <path d="M18 8 L28 18" stroke="#38bdf8" stroke-width="2.2"/>
-    </svg>
-  </div>
-  <div class="sidebar-icon active"><i class="fas fa-home"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-file-alt"></i></div>
-  <div class="sidebar-icon active"><i class="fas fa-folder"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-layer-group"></i></div>
-  <div class="sidebar-icon"><i class="fas fa-users"></i></div>
-  <div class="sidebar-bottom">
-    <div class="sidebar-icon gear"><i class="fas fa-cog"></i></div>
-  </div>
-</aside>
+<div id="sidebar-container"></div>
+<script src="/vinhzota/assets/components/sidebar.js"></script>
+<script>
+  // Load sidebar with active index 2 (Lớp học)
+  loadSidebar(2);
+</script>
 
 <!-- MAIN WRAP -->
 <div class="main-wrap">
 
-  <!-- TOPBAR -->
-  <header class="topbar">
-    <a class="back-btn" href="javascript:window.history.back()">
-      <i class="fas fa-chevron-left"></i>
-      Quay lại
-    </a>
-    <div class="topbar-right">
-      <button class="btn-buy">
-        <i class="fas fa-coins"></i> Mua point
-      </button>
-      <button class="btn-vip">
-        <i class="fas fa-gem"></i> Nâng VIP
-      </button>
-      <div class="flag-icon"></div>
-      <div class="notif-btn"><i class="fas fa-bell"></i></div>
-      <div class="user-chip">
-        <div class="avatar" id="headerAvatar">GV</div>
-        <div class="user-info">
-          <div class="name" id="headerName">Giáo viên</div>
-          <div class="role">Giáo viên</div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <!-- Header -->
+  <div id="header-container"></div>
+  <script src="/vinhzota/assets/components/header.js"></script>
+  <script>
+    loadHeader({
+      showBack: true,
+      showSearch: false,
+      showFilter: false,
+      userName: 'Giáo viên',
+      userAvatar: 'GV'
+    });
+  </script>
 
   <!-- CONTENT -->
   <div class="content-area">
@@ -897,5 +837,9 @@ function renderQuestions() {
     }).join("");
 }
 </script>
+
+<!-- Footer -->
+<div id="footer-container"></div>
+<script src="/vinhzota/assets/components/footer.js"></script>
 </body>
 </html>
