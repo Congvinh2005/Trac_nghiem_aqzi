@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API Config</title>
+</head>
+<body>
+    <h2>Test API Config in Browser</h2>
+    <pre id="output"></pre>
+    
+    <script src="assets/js/app-config.js"></script>
+    <script>
+        const output = document.getElementById('output');
+        
+        output.textContent = '=== Testing app-config.js ===\n\n';
+        
+        try {
+            output.textContent += 'BASE_PATH: ' + BASE_PATH + '\n';
+            output.textContent += 'BASE_URL: ' + BASE_URL + '\n';
+            output.textContent += 'API.AUTH: ' + API.AUTH + '\n';
+            output.textContent += 'API.EXAM: ' + API.EXAM + '\n';
+            output.textContent += 'API.SUBMISSION: ' + API.SUBMISSION + '\n';
+            output.textContent += '\n✅ All variables defined!\n';
+            
+            // Test fetch
+            output.textContent += '\n=== Testing Fetch ===\n';
+            output.textContent += 'Testing: ' + API.AUTH + '?action=check_auth\n';
+            
+            fetch(API.AUTH + '?action=check_auth')
+                .then(r => r.json())
+                .then(d => {
+                    output.textContent += '✅ Fetch successful!\n';
+                    output.textContent += 'Response: ' + JSON.stringify(d, null, 2) + '\n';
+                })
+                .catch(e => {
+                    output.textContent += '❌ Fetch failed: ' + e.message + '\n';
+                });
+                
+        } catch (e) {
+            output.textContent += '❌ Error: ' + e.message + '\n';
+            output.textContent += 'Stack: ' + e.stack + '\n';
+        }
+    </script>
+</body>
+</html>
