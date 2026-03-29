@@ -11,10 +11,10 @@ if (file_exists(__DIR__ . '/database_config.php')) {
 }
 
 class Database {
-    private $host;
-    private $db_name;
-    private $username;
-    private $password;
+    public $host;
+    public $db_name;
+    public $username;
+    public $password;
     private $charset = "utf8mb4";
 
     public $conn;
@@ -62,16 +62,12 @@ class Database {
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
 
-            echo "<!-- DB Debug: host={$this->host}, db={$this->db_name}, user={$this->username} -->\n";
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
-            echo "<!-- PDO Connection Success! -->\n";
             
         } catch(PDOException $e) {
-            // Hiển thị lỗi trên cả hosting để debug
-            echo "<!-- PDO Error: " . $e->getMessage() . " -->\n";
-            echo "<!-- Host: {$this->host}, DB: {$this->db_name}, User: {$this->username} -->\n";
-            // Log error too
-            error_log("DB Connection Error: " . $e->getMessage());
+            // Hiển thị lỗi rõ ràng
+            die("PDO Connection Error: " . $e->getMessage() . 
+                "\nHost: {$this->host}, DB: {$this->db_name}, User: {$this->username}");
         }
 
         return $this->conn;
