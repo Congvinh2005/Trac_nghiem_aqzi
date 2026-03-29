@@ -62,14 +62,16 @@ class Database {
                 PDO::ATTR_EMULATE_PREPARES => false,
             ];
 
+            echo "<!-- DB Debug: host={$this->host}, db={$this->db_name}, user={$this->username} -->\n";
             $this->conn = new PDO($dsn, $this->username, $this->password, $options);
+            echo "<!-- PDO Connection Success! -->\n";
+            
         } catch(PDOException $e) {
-            // Log error on production, show on local
-            if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
-                echo "Connection Error: " . $e->getMessage();
-            } else {
-                error_log("DB Connection Error: " . $e->getMessage());
-            }
+            // Hiển thị lỗi trên cả hosting để debug
+            echo "<!-- PDO Error: " . $e->getMessage() . " -->\n";
+            echo "<!-- Host: {$this->host}, DB: {$this->db_name}, User: {$this->username} -->\n";
+            // Log error too
+            error_log("DB Connection Error: " . $e->getMessage());
         }
 
         return $this->conn;
