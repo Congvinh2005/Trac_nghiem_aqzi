@@ -1,45 +1,68 @@
 <?php
 /**
- * Test Direct API Login
+ * Test Direct API Login - Simple Version
  */
-session_start();
-require_once '../models/User.php';
-require_once 'database.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-echo "<h2>Direct API Login Test</h2>";
+session_start();
+
+echo "<h2>Simple Login Test</h2>";
 echo "<pre>\n";
 
 // Test credentials
 $username = 'admin';
 $password = 'password123';
 
-echo "=== Testing Login API ===\n";
 echo "Username: " . $username . "\n";
-echo "Password: " . $password . "\n";
-echo "\n";
+echo "Password: " . $password . "\n\n";
 
 try {
+    echo "Loading database...\n";
+    require_once '../config/database.php';
+    echo "✅ database.php loaded\n\n";
+    
+    echo "Creating Database object...\n";
     $database = new Database();
+    echo "✅ Database object created\n";
+    echo "   Host: " . $database->host . "\n";
+    echo "   DB: " . $database->db_name . "\n\n";
+    
+    echo "Getting connection...\n";
     $db = $database->getConnection();
+    
+    if (!$db) {
+        echo "❌ Connection failed (null)\n";
+        exit;
+    }
+    
+    echo "✅ Connection successful\n\n";
+    
+    echo "Loading User model...\n";
+    require_once '../models/User.php';
+    echo "✅ User model loaded\n\n";
+    
+    echo "Creating User object...\n";
     $user = new User($db);
+    echo "✅ User object created\n\n";
     
-    echo "✅ Database connected\n\n";
-    
-    // Get user
-    echo "Fetching user...\n";
+    echo "Fetching user '" . $username . "'...\n";
     $user_data = $user->getByUsernameOrEmail($username);
     
     if (!$user_data) {
         echo "❌ User not found!\n";
+        echo "\nAll users:\n";
+        $stmt = $db->query("SELECT ten_user, email FROM users");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "   - " . $row['ten_user'] . " (" . $row['email'] . ")\n";
+        }
         exit;
     }
     
     echo "✅ User found:\n";
     echo "   ten_user: " . $user_data['ten_user'] . "\n";
-    echo "   phan_quyen: " . $user_data['phan_quyen'] . "\n";
-    echo "\n";
+    echo "   phan_quyen: " . $user_data['phan_quyen'] . "\n\n";
     
-    // Verify password
     echo "Verifying password...\n";
     $verify_result = $user->verifyPassword($password, $user_data['password']);
     
@@ -56,40 +79,21 @@ try {
         'ten_user' => $user_data['ten_user'],
         'full_name' => $user_data['full_name'],
         'email' => $user_data['email'],
-        'phan_quyen' => $user_data['phan_quyen'],
-        'avatar' => $user_data['avatar']
+        'phan_quyen' => $user_data['phan_quyen']
     ];
     
     echo "✅ Session created!\n";
-    echo "   Session ID: " . session_id() . "\n";
-    echo "   User in session: " . $_SESSION['user']['ten_user'] . "\n";
-    echo "\n";
+    echo "   User: " . $_SESSION['user']['ten_user'] . "\n\n";
     
-    // Return JSON like the real API
-    $redirect = ($user_data['phan_quyen'] === 'teacher') ? '/views/trang_admin.html' : '/views/trang_chu.html';
-    
-    echo "=== JSON Response (what JavaScript receives) ===\n";
-    $response = [
-        'success' => true,
-        'message' => 'Đăng nhập thành công',
-        'redirect' => $redirect,
-        'user' => [
-            'ten_user' => $user_data['ten_user'],
-            'full_name' => $user_data['full_name'],
-            'phan_quyen' => $user_data['phan_quyen']
-        ]
-    ];
-    
-    echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    echo "\n\n";
-    
-    echo "✅ LOGIN SUCCESSFUL!\n";
-    echo "Redirect to: " . $redirect . "\n";
+    echo "✅✅✅ LOGIN SUCCESSFUL! ✅✅✅\n";
+    echo "Redirect to: /views/" . ($user_data['phan_quyen'] === 'teacher' ? 'trang_admin.html' : 'trang_chu.html') . "\n";
     
 } catch (Exception $e) {
-    echo "❌ Exception: " . $e->getMessage() . "\n";
-    echo "   File: " . $e->getFile() . "\n";
-    echo "   Line: " . $e->getLine() . "\n";
+    echo "❌❌❌ ERROR! ❌❌❌\n";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . "\n";
+    echo "Line: " . $e->getLine() . "\n";
+    echo "\nStack trace:\n" . $e->getTraceAsString() . "\n";
 }
 
 echo "</pre>\n";
