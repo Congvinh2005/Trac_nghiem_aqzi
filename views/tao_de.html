@@ -24,7 +24,6 @@
 
         /* Main */
         .main {
-            margin-left: 90px;
             padding: 20px 40px;
             flex: 1;
         }
@@ -448,21 +447,23 @@
         loadSidebar(1);
     </script>
 
-    <!-- Header -->
-    <div id="header-container"></div>
-    <script src="/vinhzota/assets/components/header.js"></script>
-    <script>
-        loadHeader({
-            showBack: true,
-            showSearch: false,
-            showFilter: false,
-            userName: 'Giáo viên',
-            userAvatar: 'GV'
-        });
-    </script>
+    <!-- Main Content Wrapper -->
+    <div class="main-content">
+        <!-- Header -->
+        <div id="header-container"></div>
+        <script src="/vinhzota/assets/components/header.js?v=2"></script>
+        <script>
+            loadHeader({
+                showBack: true,
+                showSearch: false,
+                showFilter: false,
+                userName: 'Giáo viên',
+                userAvatar: 'GV'
+            });
+        </script>
 
-    <!-- Main -->
-    <div class="main">
+        <!-- Main -->
+        <div class="main">
         <div class="card">
             <h1 class="title">TẠO ĐỀ THI MỚI</h1>
             
@@ -840,9 +841,11 @@
             }
         }
     </script>
-    
+
     <!-- Footer -->
     <div id="footer-container"></div>
-    <script src="/vinhzota/assets/components/footer.js"></script>
+    <script src="/vinhzota/assets/components/footer.js?v=2"></script>
+    </div>
+    <!-- End Main Content Wrapper -->
 </body>
 </html>

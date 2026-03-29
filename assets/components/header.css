@@ -17,6 +17,12 @@
     align-items: center;
 }
 
+.header-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
 .back-btn {
     background: none;
     border: none;

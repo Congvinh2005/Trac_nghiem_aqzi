@@ -92,25 +92,13 @@
     flex-direction: column;
 }
 
-/* Header - when used with sidebar */
-.header {
-    margin-left: 90px !important;
-}
-
-/* Footer - when used with sidebar */
-.footer {
-    margin-left: 90px !important;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 70px;
     }
 
-    .main-content,
-    .header,
-    .footer {
+    .main-content {
         margin-left: 70px;
     }
 

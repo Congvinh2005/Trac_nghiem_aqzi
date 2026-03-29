@@ -24,7 +24,6 @@
 
         /* Main */
         .main {
-            margin-left: 90px;
             padding: 20px;
             flex: 1;
         }
@@ -143,6 +142,8 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 540px;
+            overflow-y: auto;
         }
 
         .table-header {
@@ -277,20 +278,22 @@
         loadSidebar(1);
     </script>
 
-    <!-- Header -->
-    <div id="header-container"></div>
-    <script src="/vinhzota/assets/components/header.js"></script>
-    <script>
-        loadHeader({
-            showBack: false,
-            showSearch: false,
-            userName: 'Giáo viên',
-            userAvatar: 'GV'
-        });
-    </script>
+    <!-- Main Content Wrapper -->
+    <div class="main-content">
+        <!-- Header -->
+        <div id="header-container"></div>
+        <script src="/vinhzota/assets/components/header_admin.js?v=1"></script>
+        <script>
+            loadHeaderAdmin({
+                showSearch: true,
+                showFilter: false,
+                userName: 'Giáo viên',
+                userAvatar: 'GV'
+            });
+        </script>
 
-    <!-- Main -->
-    <div class="main">
+        <!-- Main -->
+        <div class="main">
         <!-- Top bar -->
         <div class="top-bar">
             <h1 class="page-title">Tất cả đề thi</h1>
@@ -518,9 +521,11 @@
         // Initialize
         checkAuth();
     </script>
-    
+
     <!-- Footer -->
     <div id="footer-container"></div>
     <script src="/vinhzota/assets/components/footer.js"></script>
+    </div>
+    <!-- End Main Content Wrapper -->
 </body>
 </html>

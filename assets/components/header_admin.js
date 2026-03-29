@@ -1,20 +1,17 @@
 /**
- * Header Component Loader
+ * Header Admin Component Loader
  */
 
-// Load header HTML component
-async function loadHeader(options = {}) {
+async function loadHeaderAdmin(options = {}) {
     const {
-        showBack = true,
         showSearch = true,
         showFilter = true,
-        customTitle = '',
         userName = 'Giáo viên',
         userAvatar = 'GV'
     } = options;
 
     try {
-        const response = await fetch('/vinhzota/assets/components/header.html?v=' + Date.now());
+        const response = await fetch('/vinhzota/assets/components/header_admin.html?v=' + Date.now());
         let headerHTML = await response.text();
 
         const headerContainer = document.getElementById('header-container');
@@ -23,39 +20,6 @@ async function loadHeader(options = {}) {
 
             // Đợi DOM render xong
             setTimeout(() => {
-                const customTitleEl = document.getElementById('headerCustomTitle');
-                const backBtnEl = document.getElementById('headerBackBtn');
-                const backTextEl = document.getElementById('headerBackText');
-
-                console.log('=== Header Debug ===');
-                console.log('customTitle:', customTitle);
-                console.log('customTitleEl:', customTitleEl);
-                console.log('backBtnEl:', backBtnEl);
-
-                if (customTitle) {
-                    // Hiển thị custom title, ẩn back button
-                    if (customTitleEl) {
-                        customTitleEl.textContent = customTitle;
-                        customTitleEl.style.display = 'block';
-                        console.log('Đã hiển thị custom title:', customTitle);
-                    }
-                    if (backBtnEl) {
-                        backBtnEl.style.display = 'none';
-                        console.log('Đã ẩn back button');
-                    }
-                } else {
-                    // Xử lý back button và label
-                    if (backBtnEl) {
-                        backBtnEl.style.display = showBack ? 'flex' : 'none';
-                        if (showBack && options.backLabel) {
-                            if (backTextEl) backTextEl.textContent = options.backLabel;
-                        }
-                    }
-                    if (customTitleEl) {
-                        customTitleEl.style.display = 'none';
-                    }
-                }
-
                 // Ẩn search nếu không hiển thị
                 if (!showSearch) {
                     const headerCenter = headerContainer.querySelector('.header-center');
@@ -84,7 +48,7 @@ async function loadHeader(options = {}) {
             }, 100);
         }
     } catch (error) {
-        console.error('Error loading header:', error);
+        console.error('Error loading header admin:', error);
     }
 }
 
@@ -162,6 +126,7 @@ function setupSearchHandler(callback) {
 document.addEventListener('DOMContentLoaded', function() {
     const headerContainer = document.getElementById('header-container');
     if (headerContainer) {
-        loadHeader();
+        // Only load if loadHeaderAdmin was called, or default
+        // loadHeaderAdmin(); // Commennted out to let explicit calls run it
     }
 });
