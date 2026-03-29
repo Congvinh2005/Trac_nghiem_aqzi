@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadReview() {
     try {
         // Get submission
-        const subResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submission_detail&ma_bai_lam=${ma_bai_lam}`);
+        const subResponse = await fetch(API.SUBMISSION + '?action=get_submission_detail&ma_bai_lam=' + ma_bai_lam);
         const subResult = await subResponse.json();
 
         if (!subResult.success) {
@@ -447,14 +447,14 @@ async function loadReview() {
         } catch (e) {}
 
         // Get exam info
-        const examResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${submission.ma_de}`);
+        const examResponse = await fetch(API.EXAM + '?action=get_by_id&ma_de=' + submission.ma_de);
         const examResult = await examResponse.json();
         if (examResult.success) {
             document.getElementById('examTitle').textContent = examResult.data.ten_de;
         }
 
         // Get exam questions with correct answers
-        const qResponse = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${submission.ma_de}`);
+        const qResponse = await fetch(API.SUBMISSION + '?action=get_questions&ma_de=' + submission.ma_de);
         const qResult = await qResponse.json();
 
         if (qResult.success) {
@@ -570,10 +570,11 @@ function formatDateTime(dateString) {
 
 // Copy link
 function copyLink() {
-    const text = window.location.origin + '/vinhzota/views/ket_qua.html?ma_bai_lam=' + ma_bai_lam;
+    const text = BASE_URL + '/views/ket_qua.html?ma_bai_lam=' + ma_bai_lam;
     navigator.clipboard.writeText(text);
     alert('Đã sao chép liên kết!');
 }
 </script>
+<script src="assets/js/app-config.js"></script>
 </body>
 </html>

@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lớp học - Azota</title>
-    <link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/header.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/footer.css">
+    <link rel="stylesheet" href="../assets/components/sidebar.css">
+    <link rel="stylesheet" href="../assets/components/header.css">
+    <link rel="stylesheet" href="../assets/components/footer.css">
     <style>
         * {
             margin: 0;
@@ -397,7 +397,8 @@
 <body>
     <!-- Sidebar -->
     <div id="sidebar-container"></div>
-    <script src="/vinhzota/assets/components/sidebar.js"></script>
+    <script src="../assets/js/app-config.js"></script>
+    <script src="../assets/components/sidebar.js"></script>
     <script>
         // Load sidebar with active index 2 (Lớp học)
         loadSidebar(2);
@@ -407,7 +408,7 @@
     <div class="main-content">
         <!-- Header -->
         <div id="header-container"></div>
-        <script src="/vinhzota/assets/components/header.js?v=2"></script>
+        <script src="../assets/components/header.js?v=2"></script>
         <script>
             loadHeader({
                 showBack: true,
@@ -651,7 +652,7 @@
         // Load user profile
         async function loadUserProfile() {
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const response = await fetch(API.AUTH + '?action=check_auth');
                 const result = await response.json();
 
                 if (result.authenticated && result.user) {
@@ -687,7 +688,7 @@
         // Load exam information
         async function loadExamData() {
             try {
-                const response = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${ma_de}`);
+                const response = await fetch(API.EXAM + '?action=get_by_id&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -720,12 +721,12 @@
         // Load submissions
         async function loadSubmissions() {
             try {
-                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submissions&ma_de=${ma_de}`);
+                const response = await fetch(API.SUBMISSION + '?action=get_submissions&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success) {
                     submissions = result.data;
-                    document.querySelector('.info-item:nth-child(4) span:last-child').textContent = 
+                    document.querySelector('.info-item:nth-child(4) span:last-child').textContent =
                         `Số lượt làm: ${submissions.length}`;
                     renderStudents(submissions);
                 }
@@ -879,7 +880,7 @@
 
         // Copy Link
         function copyLink() {
-            const text = window.location.origin + '/vinhzota/views/gui_bai.html?code=' + (examData?.ma_code || '');
+            const text = BASE_URL + '/views/gui_bai.html?code=' + (examData?.ma_code || '');
             navigator.clipboard.writeText(text);
             alert('Đã sao chép liên kết!');
         }
@@ -988,7 +989,7 @@
 
     <!-- Footer -->
     <div id="footer-container"></div>
-    <script src="/vinhzota/assets/components/footer.js?v=2"></script>
+    <script src="../assets/components/footer.js?v=2"></script>
     </div>
     <!-- End Main Content Wrapper -->
 </body>

@@ -140,7 +140,7 @@
         // Check auth
         async function checkAuth() {
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const response = await fetch(API.AUTH + '?action=check_auth');
                 const result = await response.json();
 
                 if (!result.authenticated) {
@@ -167,7 +167,7 @@
         async function logout() {
             if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=logout');
+                const response = await fetch(API.AUTH + '?action=logout');
                 const result = await response.json();
                 if (result.success) {
                     window.location.href = result.redirect;
@@ -184,5 +184,6 @@
 
         checkAuth();
     </script>
+    <script src="assets/js/app-config.js"></script>
 </body>
 </html>

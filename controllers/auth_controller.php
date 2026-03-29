@@ -98,7 +98,7 @@ function handleLogin($user) {
     ];
     
     // Determine redirect based on role
-    $redirect = '/vinhzota/views/';
+    $redirect = '/views/';
     if ($user_data['phan_quyen'] === 'teacher') {
         $redirect .= 'trang_admin.html';
     } else {
@@ -178,7 +178,7 @@ function handleRegister($user) {
             echo json_encode([
                 'success' => true,
                 'message' => 'Đăng ký thành công',
-                'redirect' => '/vinhzota/views/dang_nhap.html'
+                'redirect' => '/views/dang_nhap.html'
             ]);
         } else {
             error_log('Register failed: create returned false');
@@ -198,7 +198,7 @@ function handleLogout() {
     echo json_encode([
         'success' => true,
         'message' => 'Đăng xuất thành công',
-        'redirect' => '/vinhzota/views/dang_nhap.html'
+        'redirect' => '/views/dang_nhap.html'
     ]);
 }
 

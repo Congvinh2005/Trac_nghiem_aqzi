@@ -590,7 +590,7 @@
         // Load exam info
         async function loadExamInfo() {
             try {
-                const response = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_code&code=${ma_code}`);
+                const response = await fetch(API.EXAM + '?action=get_by_code&code=' + ma_code);
                 const result = await response.json();
 
                 if (result.success) {
@@ -645,7 +645,7 @@
         // Load question count
         async function loadQuestionCount(ma_de) {
             try {
-                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${ma_de}`);
+                const response = await fetch(API.SUBMISSION + '?action=get_questions&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success) {
@@ -660,7 +660,7 @@
         // Check auth
         async function checkAuth() {
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const response = await fetch(API.AUTH + '?action=check_auth');
                 const result = await response.json();
 
                 if (result.authenticated) {
@@ -719,10 +719,11 @@
 
         // Copy link
         function copyLink() {
-            const url = window.location.origin + '/vinhzota/views/gui_bai.html?code=' + ma_code;
+            const url = BASE_URL + '/views/gui_bai.html?code=' + ma_code;
             navigator.clipboard.writeText(url);
             alert('Đã sao chép liên kết!');
         }
     </script>
+    <script src="assets/js/app-config.js"></script>
 </body>
 </html>

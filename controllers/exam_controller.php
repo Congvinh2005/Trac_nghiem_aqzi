@@ -109,7 +109,7 @@ function createExam() {
             'data' => [
                 'ma_de' => $result['ma_de'],
                 'ma_code' => $result['ma_code'],
-                'link' => '/vinhzota/views/gui_bai.html?code=' . $result['ma_code']
+                'link' => '/views/gui_bai.html?code=' . $result['ma_code']
             ]
         ]);
     } else {

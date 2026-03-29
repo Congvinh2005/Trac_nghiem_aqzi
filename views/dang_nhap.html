@@ -394,7 +394,7 @@
             loginBtn.textContent = 'Đang đăng nhập...';
 
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=login', {
+                const response = await fetch(API.AUTH + '?action=login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -446,5 +446,6 @@
             }
         });
     </script>
+    <script src="assets/js/app-config.js"></script>
 </body>
 </html>

@@ -315,7 +315,7 @@
         // Load exam info
         async function loadExamInfo() {
             try {
-                const response = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${ma_de}`);
+                const response = await fetch(API.EXAM + '?action=get_by_id&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success) {
@@ -349,14 +349,14 @@
             loadQuestionCount(exam.ma_de);
 
             // Generate share link
-            const shareLink = window.location.origin + '/vinhzota/views/gui_bai.html?code=' + exam.ma_code;
+            const shareLink = BASE_URL + '/views/gui_bai.html?code=' + exam.ma_code;
             document.getElementById('shareLink').value = shareLink;
         }
 
         // Load question count
         async function loadQuestionCount(ma_de) {
             try {
-                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_questions&ma_de=${ma_de}`);
+                const response = await fetch(API.SUBMISSION + '?action=get_questions&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success) {
@@ -396,5 +396,6 @@
             });
         }
     </script>
+    <script src="assets/js/app-config.js"></script>
 </body>
 </html>

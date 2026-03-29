@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tạo đề thi - Vinhzota</title>
-    <link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/header.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/footer.css">
+    <link rel="stylesheet" href="../assets/components/sidebar.css">
+    <link rel="stylesheet" href="../assets/components/header.css">
+    <link rel="stylesheet" href="../assets/components/footer.css">
     <style>
         * {
             margin: 0;
@@ -452,7 +452,8 @@
 <body>
     <!-- Sidebar -->
     <div id="sidebar-container"></div>
-    <script src="/vinhzota/assets/components/sidebar.js"></script>
+    <script src="assets/js/app-config.js"></script>
+    <script src="../assets/components/sidebar.js"></script>
     <script>
         // Load sidebar with active index 1 (Đề thi)
         loadSidebar(1);
@@ -462,7 +463,7 @@
     <div class="main-content">
         <!-- Header -->
         <div id="header-container"></div>
-        <script src="/vinhzota/assets/components/header.js?v=2"></script>
+        <script src="../assets/components/header.js?v=2"></script>
         <script>
             loadHeader({
                 showBack: true,
@@ -595,7 +596,7 @@
         async function loadExamData() {
             try {
                 // Load exam info
-                const examResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_by_id&ma_de=${ma_de}`);
+                const examResponse = await fetch(API.EXAM + '?action=get_by_id&ma_de=' + ma_de);
                 const examResult = await examResponse.json();
                 
                 if (examResult.success) {
@@ -618,7 +619,7 @@
                 }
                 
                 // Load questions
-                const qResponse = await fetch(`/vinhzota/controllers/exam_controller.php?action=get_questions&ma_de=${ma_de}`);
+                const qResponse = await fetch(API.EXAM + '?action=get_questions&ma_de=' + ma_de);
                 const qResult = await qResponse.json();
                 
                 if (qResult.success) {
@@ -671,7 +672,7 @@
             formData.append('file', file);
 
             try {
-                const response = await fetch('/vinhzota/controllers/exam_controller.php?action=parse_file', {
+                const response = await fetch(API.EXAM + '?action=parse_file', {
                     method: 'POST',
                     body: formData
                 });
@@ -810,7 +811,7 @@
                 // Update or create exam
                 if (ma_de && mode === 'edit') {
                     // Update existing exam
-                    const updateResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=update', {
+                    const updateResponse = await fetch(API.EXAM + '?action=update', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -830,7 +831,7 @@
                     }
                 } else {
                     // Create new exam
-                    const createResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=create', {
+                    const createResponse = await fetch(API.EXAM + '?action=create', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -855,7 +856,7 @@
                 // Save questions
                 console.log('Saving questions:', JSON.stringify(questions, null, 2));
 
-                const saveResponse = await fetch('/vinhzota/controllers/exam_controller.php?action=save_questions', {
+                const saveResponse = await fetch(API.EXAM + '?action=save_questions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -888,7 +889,7 @@
 
     <!-- Footer -->
     <div id="footer-container"></div>
-    <script src="/vinhzota/assets/components/footer.js?v=2"></script>
+    <script src="../assets/components/footer.js?v=2"></script>
     </div>
     <!-- End Main Content Wrapper -->
 </body>

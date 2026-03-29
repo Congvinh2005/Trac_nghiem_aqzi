@@ -498,7 +498,7 @@
         // Load result
         async function loadResult() {
             try {
-                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submission_detail&ma_bai_lam=${ma_bai_lam}`);
+                const response = await fetch(API.SUBMISSION + '?action=get_submission_detail&ma_bai_lam=' + ma_bai_lam);
                 const result = await response.json();
 
                 if (result.success) {
@@ -589,7 +589,7 @@
         // Load leaderboard
         async function loadLeaderboard(ma_de, currentMaBaiLam, currentScore, currentStudentName) {
             try {
-                const response = await fetch(`/vinhzota/controllers/submission_controller.php?action=get_submissions&ma_de=${ma_de}`);
+                const response = await fetch(API.SUBMISSION + '?action=get_submissions&ma_de=' + ma_de);
                 const result = await response.json();
 
                 if (result.success && result.data) {
@@ -701,5 +701,6 @@
             }
         }
     </script>
+    <script src="assets/js/app-config.js"></script>
 </body>
 </html>

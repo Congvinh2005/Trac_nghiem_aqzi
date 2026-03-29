@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý đề thi - Vinhzota</title>
-    <link rel="stylesheet" href="/vinhzota/assets/components/sidebar.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/header.css">
-    <link rel="stylesheet" href="/vinhzota/assets/components/footer.css">
+    <link rel="stylesheet" href="../assets/components/sidebar.css">
+    <link rel="stylesheet" href="../assets/components/header.css">
+    <link rel="stylesheet" href="../assets/components/footer.css">
     <style>
         * {
             margin: 0;
@@ -272,9 +272,9 @@
 <body>
     <!-- Sidebar -->
     <div id="sidebar-container"></div>
-    <script src="/vinhzota/assets/components/sidebar.js"></script>
+    <script src="../assets/js/app-config.js"></script>
+    <script src="../assets/components/sidebar.js"></script>
     <script>
-        // Load sidebar with active index 1 (Đề thi)
         loadSidebar(1);
     </script>
 
@@ -282,7 +282,7 @@
     <div class="main-content">
         <!-- Header -->
         <div id="header-container"></div>
-        <script src="/vinhzota/assets/components/header_admin.js?v=1"></script>
+        <script src="../assets/components/header_admin.js?v=1"></script>
         <script>
             loadHeaderAdmin({
                 showSearch: true,
@@ -348,7 +348,7 @@
         // Check authentication on load
         async function checkAuth() {
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=check_auth');
+                const response = await fetch(API.AUTH + '?action=check_auth');
                 const result = await response.json();
 
                 if (!result.authenticated || result.user.phan_quyen !== 'teacher') {
@@ -357,7 +357,7 @@
                 }
 
                 currentUser = result.user;
-                
+
                 // Update header with user info
                 const headerUserName = document.getElementById('headerUserName');
                 const headerAvatar = document.getElementById('headerAvatar');
@@ -378,7 +378,7 @@
         // Load exams
         async function loadExams() {
             try {
-                const response = await fetch('/vinhzota/controllers/exam_controller.php?action=get_by_teacher');
+                const response = await fetch(API.EXAM + '?action=get_by_teacher');
                 const result = await response.json();
 
                 if (result.success && result.data.length > 0) {
@@ -444,7 +444,7 @@
             }
 
             try {
-                const response = await fetch('/vinhzota/controllers/exam_controller.php?action=delete', {
+                const response = await fetch(API.EXAM + '?action=delete', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -473,7 +473,7 @@
             }
 
             try {
-                const response = await fetch('/vinhzota/controllers/auth_controller.php?action=logout');
+                const response = await fetch(API.AUTH + '?action=logout');
                 const result = await response.json();
 
                 if (result.success) {
@@ -524,7 +524,7 @@
 
     <!-- Footer -->
     <div id="footer-container"></div>
-    <script src="/vinhzota/assets/components/footer.js"></script>
+    <script src="../assets/components/footer.js"></script>
     </div>
     <!-- End Main Content Wrapper -->
 </body>
