@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Components v2</title>
+    <link rel="stylesheet" href="../assets/components/sidebar.css?v=2">
+    <link rel="stylesheet" href="../assets/components/header.css?v=2">
+    <link rel="stylesheet" href="../assets/components/footer.css?v=2">
+</head>
+<body>
+    <h2>Test Components v2 (Cache Bypass)</h2>
+    
+    <div id="sidebar-container"></div>
+    <div id="header-container"></div>
+    <div id="footer-container"></div>
+    
+    <script src="../assets/js/app-config.js?v=2"></script>
+    <script src="../assets/components/sidebar.js?v=2"></script>
+    <script src="../assets/components/header.js?v=2"></script>
+    <script src="../assets/components/footer.js?v=2"></script>
+    
+    <script>
+        console.log('=== Component Test v2 ===');
+        console.log('BASE_PATH:', BASE_PATH);
+        console.log('loadSidebar:', typeof loadSidebar);
+        console.log('loadHeader:', typeof loadHeader);
+        console.log('loadFooter:', typeof loadFooter);
+        
+        // Load components
+        if (typeof loadSidebar === 'function') {
+            loadSidebar(1);
+            console.log('✅ Called loadSidebar(1)');
+        } else {
+            console.error('❌ loadSidebar is not a function!');
+        }
+        
+        if (typeof loadHeader === 'function') {
+            loadHeader({showBack: false, userName: 'Admin', userAvatar: 'A'});
+            console.log('✅ Called loadHeader()');
+        } else {
+            console.error('❌ loadHeader is not a function!');
+        }
+        
+        if (typeof loadFooter === 'function') {
+            loadFooter();
+            console.log('✅ Called loadFooter()');
+        } else {
+            console.error('❌ loadFooter is not a function!');
+        }
+        
+        // Check after 2 seconds
+        setTimeout(() => {
+            const sidebar = document.getElementById('sidebar-container');
+            const header = document.getElementById('header-container');
+            const footer = document.getElementById('footer-container');
+            
+            console.log('\n=== Results ===');
+            console.log('Sidebar HTML length:', sidebar ? sidebar.innerHTML.length : 'N/A');
+            console.log('Header HTML length:', header ? header.innerHTML.length : 'N/A');
+            console.log('Footer HTML length:', footer ? footer.innerHTML.length : 'N/A');
+            
+            if (sidebar && sidebar.innerHTML.trim()) {
+                console.log('✅ Sidebar LOADED!');
+            } else {
+                console.error('❌ Sidebar NOT loaded!');
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
