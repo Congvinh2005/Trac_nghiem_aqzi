@@ -1,5 +1,5 @@
 # Vinhzota - .htaccess Configuration
-# Works on both local (XAMPP) and hosting (cPanel/Apache)
+# Deploy to ROOT (public_html)
 
 RewriteEngine On
 
@@ -23,5 +23,5 @@ RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 Options -Indexes
 
 # Custom error pages (optional)
-# ErrorDocument 404 /vinhzota/404.html
-# ErrorDocument 403 /vinhzota/403.html
+ErrorDocument 404 /404.html
+ErrorDocument 403 /403.html
