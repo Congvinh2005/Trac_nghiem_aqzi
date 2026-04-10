@@ -10,6 +10,13 @@ require_once '../models/User.php';
 
 header('Content-Type: application/json');
 
+function getAppBasePath() {
+    $scriptName = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+    $scriptName = str_replace('\\', '/', $scriptName);
+    $basePath = preg_replace('#/controllers/[^/]+$#', '', $scriptName);
+    return rtrim($basePath, '/');
+}
+
 // Get database connection
 $database = new Database();
 $db = $database->getConnection();
@@ -98,7 +105,8 @@ function handleLogin($user) {
     ];
     
     // Determine redirect based on role
-    $redirect = '/views/';
+    $basePath = getAppBasePath();
+    $redirect = $basePath . '/views/';
     if ($user_data['phan_quyen'] === 'teacher') {
         $redirect .= 'trang_admin.html';
     } else {
@@ -178,7 +186,7 @@ function handleRegister($user) {
             echo json_encode([
                 'success' => true,
                 'message' => 'Đăng ký thành công',
-                'redirect' => '/views/dang_nhap.html'
+                'redirect' => getAppBasePath() . '/views/dang_nhap.html'
             ]);
         } else {
             error_log('Register failed: create returned false');
@@ -195,10 +203,11 @@ function handleRegister($user) {
  */
 function handleLogout() {
     session_destroy();
+    $basePath = getAppBasePath();
     echo json_encode([
         'success' => true,
         'message' => 'Đăng xuất thành công',
-        'redirect' => '/views/dang_nhap.html'
+        'redirect' => $basePath . '/views/dang_nhap.html'
     ]);
 }
 

@@ -5,16 +5,32 @@
 
 // Tự động phát hiện base path
 function getBasePath() {
-    const path = window.location.pathname;
-    const parts = path.split('/');
-    
-    // Tìm 'vinhzota' trong path
-    const vinhzotaIndex = parts.indexOf('vinhzota');
-    if (vinhzotaIndex !== -1) {
-        // Lấy tất cả phần từ đầu đến 'vinhzota'
-        return parts.slice(0, vinhzotaIndex + 1).join('/');
+    const path = window.location.pathname || '';
+    const normalizedPath = path.replace(/\/+$/, '');
+    const lowerPath = normalizedPath.toLowerCase();
+
+    // Ưu tiên cắt theo các thư mục chuẩn của dự án
+    const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+    for (const marker of markers) {
+        const idx = lowerPath.indexOf(marker);
+        if (idx === 0) {
+            return '';
+        }
+        if (idx > 0) {
+            return normalizedPath.slice(0, idx);
+        }
+        // Trường hợp URL kết thúc ngay tại thư mục marker, ví dụ: /vinhzota/views
+        if (lowerPath.endsWith(marker.slice(0, -1))) {
+            return normalizedPath.slice(0, -marker.length + 1);
+        }
     }
-    
+
+    const parts = normalizedPath.split('/').filter(Boolean);
+    if (parts.length > 0) {
+        // Fallback: lấy segment đầu tiên làm base path
+        return '/' + parts[0];
+    }
+
     // Nếu không tìm thấy, trả về rỗng (root)
     return '';
 }

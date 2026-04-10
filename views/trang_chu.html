@@ -110,6 +110,7 @@
     </style>
 </head>
 <body>
+    <script src="../assets/js/app-config.js?v=20260411"></script>
     <div class="header">
         <div class="logo">
             <div class="logo-icon">V</div>
@@ -137,10 +138,32 @@
     </div>
 
     <script>
+        function getFallbackBasePath() {
+            const path = window.location.pathname || '';
+            const lower = path.toLowerCase();
+            const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+
+            for (const marker of markers) {
+                const idx = lower.indexOf(marker);
+                if (idx === 0) return '';
+                if (idx > 0) return path.slice(0, idx);
+            }
+
+            const parts = path.split('/').filter(Boolean);
+            return parts.length > 0 ? '/' + parts[0] : '';
+        }
+
+        function getAuthApiUrl() {
+            if (typeof API !== 'undefined' && API && typeof API.AUTH === 'string' && API.AUTH.length > 0) {
+                return API.AUTH;
+            }
+            return getFallbackBasePath() + '/controllers/auth_controller.php';
+        }
+
         // Check auth
         async function checkAuth() {
             try {
-                const response = await fetch(API.AUTH + '?action=check_auth');
+                const response = await fetch(getAuthApiUrl() + '?action=check_auth');
                 const result = await response.json();
 
                 if (!result.authenticated) {
@@ -167,7 +190,7 @@
         async function logout() {
             if (!confirm('Bạn có chắc chắn muốn đăng xuất?')) return;
             try {
-                const response = await fetch(API.AUTH + '?action=logout');
+                const response = await fetch(getAuthApiUrl() + '?action=logout');
                 const result = await response.json();
                 if (result.success) {
                     window.location.href = result.redirect;
@@ -184,6 +207,5 @@
 
         checkAuth();
     </script>
-    <script src="../assets/js/app-config.js"></script>
 </body>
 </html>

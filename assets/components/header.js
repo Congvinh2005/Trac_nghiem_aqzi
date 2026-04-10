@@ -19,6 +19,25 @@ if (typeof BASE_PATH === 'undefined') {
     const BASE_PATH = getBasePath();
 }
 
+function getComponentBasePath() {
+    if (typeof BASE_PATH !== 'undefined') {
+        return BASE_PATH;
+    }
+
+    const path = window.location.pathname || '';
+    const lower = path.toLowerCase();
+    const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+
+    for (const marker of markers) {
+        const idx = lower.indexOf(marker);
+        if (idx === 0) return '';
+        if (idx > 0) return path.slice(0, idx);
+    }
+
+    const parts = path.split('/').filter(Boolean);
+    return parts.length > 0 ? '/' + parts[0] : '';
+}
+
 // Load header HTML component
 async function loadHeader(options = {}) {
     const {
@@ -145,7 +164,7 @@ async function logout() {
     }
 
     try {
-        const response = await fetch('/vinhzota/controllers/auth_controller.php?action=logout');
+        const response = await fetch(getComponentBasePath() + '/controllers/auth_controller.php?action=logout');
         const result = await response.json();
 
         if (result.success) {

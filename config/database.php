@@ -5,8 +5,15 @@
  * Tự động phát hiện môi trường local hay hosting
  */
 
-// Kiểm tra file cấu hình riêng (cho hosting)
-if (file_exists(__DIR__ . '/database_config.php')) {
+// Chỉ nạp cấu hình hosting khi KHÔNG phải môi trường local
+$httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+$isLocalHost = (
+    stripos($httpHost, 'localhost') !== false ||
+    stripos($httpHost, '127.0.0.1') !== false ||
+    stripos($httpHost, '192.168.') !== false
+);
+
+if (!$isLocalHost && file_exists(__DIR__ . '/database_config.php')) {
     require_once __DIR__ . '/database_config.php';
 }
 

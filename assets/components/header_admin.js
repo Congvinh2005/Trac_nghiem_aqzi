@@ -2,6 +2,25 @@
  * Header Admin Component Loader
  */
 
+function getComponentBasePath() {
+    if (typeof BASE_PATH !== 'undefined') {
+        return BASE_PATH;
+    }
+
+    const path = window.location.pathname || '';
+    const lower = path.toLowerCase();
+    const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+
+    for (const marker of markers) {
+        const idx = lower.indexOf(marker);
+        if (idx === 0) return '';
+        if (idx > 0) return path.slice(0, idx);
+    }
+
+    const parts = path.split('/').filter(Boolean);
+    return parts.length > 0 ? '/' + parts[0] : '';
+}
+
 async function loadHeaderAdmin(options = {}) {
     const {
         showSearch = true,
@@ -11,7 +30,7 @@ async function loadHeaderAdmin(options = {}) {
     } = options;
 
     try {
-        const response = await fetch('/vinhzota/assets/components/header_admin.html?v=' + Date.now());
+        const response = await fetch(getComponentBasePath() + '/assets/components/header_admin.html?v=' + Date.now());
         let headerHTML = await response.text();
 
         const headerContainer = document.getElementById('header-container');
@@ -92,7 +111,7 @@ async function logout() {
     }
 
     try {
-        const response = await fetch('/vinhzota/controllers/auth_controller.php?action=logout');
+        const response = await fetch(getComponentBasePath() + '/controllers/auth_controller.php?action=logout');
         const result = await response.json();
 
         if (result.success) {

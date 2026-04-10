@@ -1,0 +1,43 @@
+Chương 1: Khái niệm cơ bản về cơ sở dữ liệu phân tán
+
+1.Một hệ thống phân tán bao gồm hai phần chính nào?
+A. Phần cứng và phần mềm.
+B. Mạng máy tính và CSDL phân tán.
+C. Máy chủ và máy khách.
+D. Hệ điều hành và ứng dụng cơ sở dữ liệu phân tán.
+
+2.Mạng Star (hình sao) sử dụng thiết bị trung tâm nào để kết nối?
+A. Modem và Switch.
+B. Router.
+C. Hub hoặc Switch.
+D. Repeater.
+
+3.Ưu điểm của cấu trúc mạng Star là gì?
+A. Tiết kiệm dây cáp nhất.
+B. Dễ dàng mở rộng hoặc thu hẹp và cung cấp chế độ quản lý tập trung.
+C. Hoạt động bình thường ngay cả khi Hub trung tâm bị hỏng hoặc có lỗi xảy ra.
+D. Không tốn chi phí lắp đặt.
+
+4.Nhược điểm lớn nhất của mạng Ring (vòng) là gì?
+A. Cần thiết bị trung tâm đắt tiền.
+B. Nếu đường nối bị cắt đứt, toàn bộ mạng có thể ngừng hoạt động.
+C. Tốc độ truyền tin chậm nhất.
+D. Chỉ truyền dữ liệu được một chiều. Không có cơ chế truyền được song song.
+
+5.Cấu trúc mạng nào có một kênh chung để truyền dữ liệu cho tất cả các máy tính?
+A. Mạng Star.
+B. Mạng Ring.
+C. Mạng Mesh.
+D. Mạng Bus.
+
+6.Đặc điểm của mạng Hybrid (hỗn hợp) là gì?
+A. Các nút nối kết theo hình vòng tròn khép kín.
+B. Các đường nối không có tính hệ thống.
+C. Mỗi nút chỉ được nối với tối đa hai nút khác.
+D. Tất cả các nút đều nối trực tiếp vào Hub.
+
+7.Loại mạng nào có độ tin cậy cao nhất nhưng chi phí đắt nhất do mỗi nút nối với tất cả các nút còn lại?
+A. Mạng Bus.
+B. Mạng Star.
+C. Mạng Mesh.
+D. Mạng Ring.

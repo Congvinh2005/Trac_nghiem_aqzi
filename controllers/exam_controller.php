@@ -338,7 +338,7 @@ function parseExamFile() {
 
 /**
  * Parse .docx file trực tiếp từ XML.
- * Detect đáp án highlight màu vàng (w:highlight val="yellow" hoặc shd fill vàng)
+ * Detect đáp án highlight màu vàng hoặc in đậm
  * và tự động đánh dấu la_dung = 1.
  */
 function parseDocxWithHighlight($filePath) {
@@ -359,7 +359,7 @@ function parseDocxWithHighlight($filePath) {
     preg_match_all('/<w:p[ >].*?<\/w:p>/s', $xmlContent, $paraMatches);
 
     $chapter_pattern  = '/^\s*(Chương|Chapter|Bài|Part|Phần)\s*\d+/iu';
-    $question_pattern = '/^\s*(\d+)\s*[.\/):-]\s*(.+)/u';
+    $question_pattern = '/^\s*(?:(?:Câu|Cau|Question|Q)\s*)?(\d+)\s*[.\/):-]\s*(.+)/iu';
     $answer_pattern   = '/^\s*([A-Da-d])\s*[.\/):-]\s*(.+)/u';
     $yellow_fills     = ['FFFF00', 'ffff00', 'yellow', 'FFFF', 'ffff'];
 
@@ -384,7 +384,14 @@ function parseDocxWithHighlight($filePath) {
             }
         }
 
-        $paragraphs[] = ['text' => $paraText, 'yellow' => (bool)$isYellow];
+        // Cách 3: in đậm <w:b/>, <w:b w:val="1"/>
+        $isBold = hasDocxBoldFormatting($paraXml);
+
+        $paragraphs[] = [
+            'text' => $paraText,
+            'yellow' => (bool)$isYellow,
+            'bold' => (bool)$isBold
+        ];
     }
 
     // Parse theo kiểu sliding window
@@ -431,7 +438,8 @@ function parseDocxWithHighlight($filePath) {
 
             $answers_raw[] = [
                 'text'   => $ans_text,
-                'yellow' => $al['yellow']
+                'yellow' => $al['yellow'],
+                'bold'   => $al['bold']
             ];
             $i++;
         }
@@ -440,21 +448,26 @@ function parseDocxWithHighlight($filePath) {
 
         // Pad đến 4 đáp án nếu thiếu
         while (count($answers_raw) < 4) {
-            $answers_raw[] = ['text' => 'Chưa có nội dung', 'yellow' => false];
+            $answers_raw[] = ['text' => 'Chưa có nội dung', 'yellow' => false, 'bold' => false];
         }
 
-        // Kiểm tra có đáp án vàng không
+        // Kiểm tra có đáp án được đánh dấu đúng không (vàng hoặc in đậm)
         $has_yellow = false;
+        $has_bold = false;
         foreach ($answers_raw as $a) {
             if ($a['yellow']) { $has_yellow = true; break; }
         }
+        foreach ($answers_raw as $a) {
+            if ($a['bold']) { $has_bold = true; break; }
+        }
+        $has_marker = $has_yellow || $has_bold;
 
         $q_counter++;
         $dap_an = [];
         foreach ($answers_raw as $idx => $a) {
-            // Nếu file có highlight vàng: dùng vàng để xác định đúng
-            // Nếu không có highlight nào: la_dung = 0 (giáo viên chọn thủ công)
-            $la_dung = $has_yellow ? ($a['yellow'] ? 1 : 0) : 0;
+            // Nếu file có marker (vàng/in đậm): dùng marker để xác định đúng
+            // Nếu không có marker: la_dung = 0 (giáo viên chọn thủ công)
+            $la_dung = $has_marker ? (($a['yellow'] || $a['bold']) ? 1 : 0) : 0;
             $dap_an[] = [
                 'ky_tu'   => $letters[$idx],
                 'noi_dung'=> $a['text'],
@@ -470,6 +483,55 @@ function parseDocxWithHighlight($filePath) {
     }
 
     return $questions;
+}
+
+/**
+ * Detect bold formatting inside a DOCX paragraph run.
+ */
+function hasDocxBoldFormatting($paragraphXml) {
+    if (!preg_match_all('/<w:b\b[^>]*\/?>/i', $paragraphXml, $matches)) {
+        return false;
+    }
+
+    foreach ($matches[0] as $tag) {
+        // Skip explicit "bold off" tags like w:val="0" or w:val="false"
+        if (preg_match('/w:val\s*=\s*"(?:0|false|off)"/i', $tag)) {
+            continue;
+        }
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Check if a line contains common bold markers.
+ */
+function hasBoldMarker($text) {
+    if (!is_string($text) || $text === '') {
+        return false;
+    }
+
+    return (bool) (
+        preg_match('/<\s*(b|strong)\b[^>]*>.*?<\s*\/\s*(b|strong)\s*>/iu', $text) ||
+        preg_match('/\*\*\s*.+?\s*\*\*/u', $text) ||
+        preg_match('/__\s*.+?\s*__/u', $text)
+    );
+}
+
+/**
+ * Remove bold markers while keeping answer text.
+ */
+function stripBoldMarker($text) {
+    if (!is_string($text) || $text === '') {
+        return '';
+    }
+
+    $text = preg_replace('/<\s*\/?\s*(b|strong)\b[^>]*>/iu', '', $text);
+    $text = preg_replace('/\*\*\s*(.+?)\s*\*\*/u', '$1', $text);
+    $text = preg_replace('/__\s*(.+?)\s*__/u', '$1', $text);
+
+    return trim($text);
 }
 
 /**
@@ -495,7 +557,7 @@ function parseContent($content) {
     }
 
     $chapter_pattern  = '/^\s*(Chương|Chapter|Bài|Part|Phần)\s*\d+/iu';
-    $question_pattern = '/^\s*(\d+)\s*[.\/):-]\s*(.+)/u';
+    $question_pattern = '/^\s*(?:(?:Câu|Cau|Question|Q)\s*)?(\d+)\s*[.\/):-]\s*(.+)/iu';
     $answer_pattern   = '/^\s*([A-Da-d])\s*[.\/):-]\s*(.+)/u';
 
     $q_counter = 0;
@@ -534,9 +596,16 @@ function parseContent($content) {
             if (preg_match('/\?\s*$/u', $al) && !preg_match($answer_pattern, $al) && count($answers_raw) > 0) break;
 
             if (preg_match($answer_pattern, $al, $am)) {
-                $answers_raw[] = trim($am[2]);
+                $is_bold = hasBoldMarker($al) || hasBoldMarker($am[2]);
+                $answers_raw[] = [
+                    'text' => stripBoldMarker(trim($am[2])),
+                    'bold' => $is_bold
+                ];
             } else {
-                $answers_raw[] = $al;
+                $answers_raw[] = [
+                    'text' => stripBoldMarker($al),
+                    'bold' => hasBoldMarker($al)
+                ];
             }
             $i++;
         }
@@ -544,16 +613,24 @@ function parseContent($content) {
         if (count($answers_raw) < 2) continue;
 
         while (count($answers_raw) < 4) {
-            $answers_raw[] = 'Chưa có nội dung';
+            $answers_raw[] = ['text' => 'Chưa có nội dung', 'bold' => false];
+        }
+
+        $has_bold = false;
+        foreach ($answers_raw as $a) {
+            if (!empty($a['bold'])) {
+                $has_bold = true;
+                break;
+            }
         }
 
         $q_counter++;
         $dap_an = [];
-        foreach ($answers_raw as $idx => $ans_text) {
+        foreach ($answers_raw as $idx => $ans) {
             $dap_an[] = [
                 'ky_tu'   => $letters[$idx],
-                'noi_dung'=> $ans_text,
-                'la_dung' => 0
+                'noi_dung'=> $ans['text'],
+                'la_dung' => $has_bold ? (!empty($ans['bold']) ? 1 : 0) : 0
             ];
         }
 

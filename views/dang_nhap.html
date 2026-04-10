@@ -345,7 +345,31 @@
         </div>
     </div>
 
+    <script src="../assets/js/app-config.js"></script>
     <script>
+        function getFallbackBasePath() {
+            const path = window.location.pathname || '';
+            const lower = path.toLowerCase();
+            const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+
+            for (const marker of markers) {
+                const idx = lower.indexOf(marker);
+                if (idx === 0) {
+                    return '';
+                }
+                if (idx > 0) {
+                    return path.slice(0, idx);
+                }
+            }
+
+            const parts = path.split('/').filter(Boolean);
+            return parts.length > 0 ? '/' + parts[0] : '';
+        }
+
+        function getAuthApiUrl() {
+            return getFallbackBasePath() + '/controllers/auth_controller.php';
+        }
+
         // Toggle Password Visibility
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -394,7 +418,8 @@
             loginBtn.textContent = 'Đang đăng nhập...';
 
             try {
-                const response = await fetch(API.AUTH + '?action=login', {
+                const authApiUrl = getAuthApiUrl();
+                const response = await fetch(authApiUrl + '?action=login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -402,14 +427,26 @@
                     body: JSON.stringify({ username, password })
                 });
 
-                const result = await response.json();
+                const raw = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(raw);
+                } catch (parseError) {
+                    console.error('Login response is not JSON:', raw.slice(0, 300));
+                    const preview = (raw || '').replace(/\s+/g, ' ').trim().slice(0, 180);
+                    throw new Error('Phản hồi máy chủ không phải JSON: ' + (preview || 'rỗng'));
+                }
 
                 if (result.success) {
                     errorMessage.style.display = 'none';
                     loginBtn.textContent = 'Thành công! Đang chuyển hướng...';
                     
                     setTimeout(() => {
-                        window.location.href = result.redirect;
+                        const redirect = result.redirect || '';
+                        const target = (typeof BASE_PATH !== 'undefined' && BASE_PATH && redirect.startsWith('/views/'))
+                            ? BASE_PATH + redirect
+                            : redirect;
+                        window.location.href = target;
                     }, 1000);
                 } else {
                     showError(result.message);
@@ -419,7 +456,7 @@
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showError('Có lỗi xảy ra, vui lòng thử lại sau');
+                showError(error?.message || 'Có lỗi xảy ra, vui lòng thử lại sau');
                 loginBtn.disabled = false;
                 loginBtn.classList.remove('loading');
                 loginBtn.textContent = 'Đăng nhập';
@@ -446,6 +483,5 @@
             }
         });
     </script>
-    <script src="../assets/js/app-config.js"></script>
 </body>
 </html>

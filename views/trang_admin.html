@@ -345,11 +345,49 @@
     <script>
         let currentUser = null;
 
+        function getFallbackBasePath() {
+            const path = window.location.pathname || '';
+            const lower = path.toLowerCase();
+            const markers = ['/views/', '/controllers/', '/assets/', '/api/'];
+
+            for (const marker of markers) {
+                const idx = lower.indexOf(marker);
+                if (idx === 0) return '';
+                if (idx > 0) return path.slice(0, idx);
+            }
+
+            const parts = path.split('/').filter(Boolean);
+            return parts.length > 0 ? '/' + parts[0] : '';
+        }
+
+        function getAuthApiUrl() {
+            if (typeof API !== 'undefined' && API && typeof API.AUTH === 'string' && API.AUTH.length > 0) {
+                return API.AUTH;
+            }
+            return getFallbackBasePath() + '/controllers/auth_controller.php';
+        }
+
+        function getExamApiUrl() {
+            if (typeof API !== 'undefined' && API && typeof API.EXAM === 'string' && API.EXAM.length > 0) {
+                return API.EXAM;
+            }
+            return getFallbackBasePath() + '/controllers/exam_controller.php';
+        }
+
         // Check authentication on load
         async function checkAuth() {
             try {
-                const response = await fetch(API.AUTH + '?action=check_auth');
-                const result = await response.json();
+                const response = await fetch(getAuthApiUrl() + '?action=check_auth');
+                const raw = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(raw);
+                } catch (parseError) {
+                    console.error('check_auth non-JSON response:', raw.slice(0, 300));
+                    alert('Không thể kiểm tra phiên đăng nhập do phản hồi máy chủ không hợp lệ.');
+                    return;
+                }
 
                 if (!result.authenticated || result.user.phan_quyen !== 'teacher') {
                     window.location.href = 'dang_nhap.html';
@@ -371,14 +409,14 @@
                 loadExams();
             } catch (error) {
                 console.error('Auth error:', error);
-                window.location.href = 'dang_nhap.html';
+                alert('Không thể kiểm tra phiên đăng nhập. Vui lòng tải lại trang.');
             }
         }
 
         // Load exams
         async function loadExams() {
             try {
-                const response = await fetch(API.EXAM + '?action=get_by_teacher');
+                const response = await fetch(getExamApiUrl() + '?action=get_by_teacher');
                 const result = await response.json();
 
                 if (result.success && result.data.length > 0) {
@@ -444,7 +482,7 @@
             }
 
             try {
-                const response = await fetch(API.EXAM + '?action=delete', {
+                const response = await fetch(getExamApiUrl() + '?action=delete', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -473,7 +511,7 @@
             }
 
             try {
-                const response = await fetch(API.AUTH + '?action=logout');
+                const response = await fetch(getAuthApiUrl() + '?action=logout');
                 const result = await response.json();
 
                 if (result.success) {
